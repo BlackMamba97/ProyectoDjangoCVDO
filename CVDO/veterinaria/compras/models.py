@@ -73,17 +73,18 @@ class detalle_compra(models.Model):
             isnew = False
         with transaction.atomic():
             if isnew:
-                deta2 = DetalleProducto.objects.all().first()
-                if deta2 is None:
-                    ()
-                else:
-                    if self.numeroloteproducto != deta2.numeroloteproducto:
+                detalle = DetalleProducto.objects.all()
+                for i in detalle:
+                    detalle = i
+                    if(detalle.numeroloteproducto != self.numeroloteproducto):
                         ()
                     else:
                         raise ValidationError(
                                     'El lote número {}'.format(
                                         self.numeroloteproducto) +
                                     ' ya existe')
+            else:
+                ()
         # deta2.save()
 
        # deta = DetalleProducto.objects.filter(
@@ -116,9 +117,9 @@ class detalle_compra(models.Model):
 
         with transaction.atomic():
             if isnew:
-                # if self.numeroloteproducto != deta.numeroloteproducto or None:
-                    # deta = DetalleProducto.objects.filter(
-                       # producto=self.producto).last()
+                #deta = DetalleProducto.objects.filter(
+                 #      producto=self.producto).last()
+                #if self.numeroloteproducto != deta.numeroloteproducto or None:
                     target = DetalleProducto()
                     target.producto = self.producto
                     print(self.producto)
@@ -129,10 +130,10 @@ class detalle_compra(models.Model):
                     target.fechavencimiento = self.fechavencimiento
                     # datetime.datetime.today()
                     target.ubicacion = self.ubicacion
-                # else:
-                    # raise ValidationError(
-                    #     'El lote número {}'.format(self.numeroloteproducto) +
-                    #    ' ya existe {}'.format(deta.id))
+                #else:
+                    #raise ValidationError(
+                    #    'El lote número {}'.format(self.numeroloteproducto) +
+                    #        ' ya existe')
             target.save()
             super(detalle_compra, self).save(force_insert, force_update, using)
         # deta.save()

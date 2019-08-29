@@ -16,7 +16,7 @@ class detalle_productoInLine(admin.TabularInline):
         'fechavencimiento',
         'ubicacion',
         'fechaq',
-        'estado',
+        'estadoo',
     ]
 
     model = DetalleProducto

@@ -34,11 +34,11 @@ class Producto(models.Model):
     def Pro(self):
         if self.existencia <= 10:
             return format_html(
-                '<h1 style="color: #FF0000;">' + str(self.existencia) + '</h1>'
+                '<center><h1 style="color: #FF0000;">' + str(self.existencia) + '</h1></center>'
                 )
         else:
             return format_html(
-                '<h1 style="color: #D7DF01;">' + str(self.existencia) + '</h1>'
+                '<center><h1 style="color: #D7DF01;">' + str(self.existencia) + '</h1></center>'
                 )
     Pro.short_description = 'Existencias'
 
@@ -79,21 +79,51 @@ class DetalleProducto(models.Model):
         'Fecha de Vencimiento', null=True, blank=True)
     ubicacion = models.ForeignKey(
         ubicacion, on_delete=models.CASCADE, null=True, blank=True)
-    estado = models.BooleanField('Estado de Producto', default=False)
+    # estado = models.BooleanField('Estado de Producto', default=True)
 
     def estadoo(self):
-        pro = Producto.objects.filter(Producto=self.producto)
-        print(pro.meses)
-        if self.fechaq < pro.meses:
-            self.estado = False
-        else:
-            self.estado = True
-        self.estado.save()
-
-        # detalle.save()
-    #estadoo.short_description = 'Estado de Producto'
+        today = date.today()
+        # print('hola')
+        year = (self.fechavencimiento.year - today.year)
+        # print('aqui ya no', year)
+        month = (self.fechavencimiento.month - today.month)
+        # print('y aqui__', month)
+        day = (self.fechavencimiento.day - today.day)
+        totalyear = (year * 12)
+        meses = (month + totalyear)
+        fecha = month + totalyear
+        pro = Producto.objects.all()
+        print('entra??????')
+        # no = (self.producto)
+        print(pro)
+        for i in pro:
+            pro = i
+            if(pro == self.producto):
+                print('nombre como estamos')
+                    #pro = i
+                fecha2 = int(pro.meses)
+                print(fecha)
+                print(pro.meses)
+                if(meses < 1 and day < 1):
+                    return format_html(
+                        '<center> <p style="color: #FF0000;"> Producto Vencido </p> </center>'
+                        )
+                        # target.estado = False
+                elif (meses > fecha2):
+                    return format_html(
+                        '<center> <p style="color: #0404B4;"> Producto en Orden </p></center>'
+                        )
+                elif(meses <= fecha2):
+                    return format_html(
+                        '<center> <p style="color: #FF8000;"> Producto a ofertar </p> </center>'
+                        )
+            else:
+                    print('son diferentes')
+        pro.save()
+            # target.estado = True
+    estadoo.short_description = 'Estado de Producto'
     # -------------------------------------
-    #def fechaq(self):
+    # def fechaq(self):
     # today = date.today()
     #    fech1 = datetime.datetime.strptime(str(
     #        self.fechavencimiento), '%Y-%m-%d')
@@ -101,8 +131,9 @@ class DetalleProducto(models.Model):
     #        str(today), '%Y-%m-%d')
     #    fech = fech1 - fech2
     #    return (fech)
-    #fechaq.short_description = 'Meses a Vencerse'
-    #--------------------------------------------
+    # fechaq.short_description = 'Meses a Vencerse'
+    # --------------------------------------------
+
     def fechaq(self):
         today = date.today()
         # print('hola')
@@ -110,18 +141,28 @@ class DetalleProducto(models.Model):
         # print('aqui ya no', year)
         month = (self.fechavencimiento.month - today.month)
         # print('y aqui__', month)
+        day = (self.fechavencimiento.day - today.day)
         totalyear = (year * 12)
-        # print(totalyear)
-        return (month + totalyear)
-
-    def clean(self):
-        super(DetalleProducto, self).clean()
-        fe = self.fechaq
-        pro = Producto.objects.filter(Producto=self.producto)
-        if(fe <= pro.meses):
-            self.estado = False
+        meses = (month + totalyear)
+        if(meses < 1 and day < 1):
+            return format_html(
+                '<center> <p style="color: #FF0000;">'
+                'Producto Vencido </p></center>'
+                )
+        elif(meses == 1):
+            meses = meses*30
+            return (str(day + meses) + (' días '))
         else:
-            self.estado = True
+            return (str(month + totalyear) + (' Meses '))
+    fechaq.short_description = 'Meses a Vencerse'
+
+        # super(DetalleProducto, self).clean()
+        # fe = self.fechaq
+        # pro = Producto.objects.filter(Producto=self.producto)
+        # if(fe <= pro.meses):
+        #    self.estado = False
+        # else:
+        #    self.estado = True
 
     def __str__(self):
         return "%s " % (self.producto.nombre)
