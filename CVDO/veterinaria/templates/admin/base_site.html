@@ -1,0 +1,72 @@
+{% extends "admin/base.html" %}
+
+{% block title %} CENTRO VETERINARIO {% endblock %}
+    {% block extrastyle %}
+        <style>
+                div#header {
+                    background: #06a11b!important;
+                }
+                div .breadcrumbs{
+                    background:#2E2E2E;
+                }
+                
+
+                #changelist-filter h2 {
+                    background:#06a11b!important;
+                }
+
+                #changelist-filter ul {
+                    background:#E6E6E6!important;
+                }
+                
+                #changelist-filter {
+                    background: #e6e6e6!important;
+                    border-color: black!important;
+                }
+                .caption, .inline-group h2{
+                    background:green!important;
+                }
+                .form-row{
+                     background:#f7f4f4 !important;   
+                        opacity:0.6;
+               filter:alpha(opacity=60); /* IE < 9.0 */
+             
+                }
+                #header a:visited{
+                    color: yellow;
+                }
+                #header a:link, #header a:visited{
+                    color: yellow;
+                }
+                .form-row{
+
+                }
+
+                .flex {
+                    background:#E6E6E6;
+                }
+
+                .colMS{
+                    background:#E6E6E6;
+                }
+                .module{
+                    background:#E6E6E6;
+                }
+                .actionlist{
+                    background:#E6E6E6;
+                }
+                .colM{
+                    background:#c4c4c4;
+                }
+
+        </style>
+    {% endblock %}
+                {% block branding %}
+                    <h1 id="site-name">
+                        <a href="{% url 'admin:index' %}">
+                        </a>
+                    </h1>
+                {% endblock %}
+
+                {% block nav-global %}
+                {% endblock %}
