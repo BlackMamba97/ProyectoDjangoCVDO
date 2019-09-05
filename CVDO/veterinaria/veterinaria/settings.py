@@ -37,11 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'smart_selects',
     'import_export',
     'easy_pdf',
     'compras',
     'productos',
     'Proveedor',
+    'caja',
+    'usuarios',
+    'ventas',
+    'cliente',
 
 ]
 
@@ -141,3 +146,6 @@ STATICFILES_FINDERS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# AUTH_USER_MODEL = 'usuarios.Empleado'
+JQUERY_URL = True

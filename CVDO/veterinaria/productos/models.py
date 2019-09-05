@@ -15,7 +15,7 @@ class Producto(models.Model):
     porcentaje = models.PositiveIntegerField(
         'Porcentaje', blank=True, null=True)
     meses = models.PositiveIntegerField(
-        'Meses a Vencerse', null=True, blank=True, default=1)
+        'Meses a Vencerse', null=True, blank=True)
     existencia = models.PositiveIntegerField(
         'existencia', default=0)
 
@@ -104,7 +104,12 @@ class DetalleProducto(models.Model):
                 fecha2 = int(pro.meses)
                 print(fecha)
                 print(pro.meses)
-                if(meses < 1 and day < 1):
+                if(self.cantidad <= 0):
+                    return format_html(
+                        '<center> <p style="color: #FF0000;">'
+                        'Sin existencia </p></center>'
+                        )
+                elif(meses < 1 and day < 1):
                     return format_html(
                         '<center> <p style="color: #FF0000;"> Producto Vencido </p> </center>'
                         )
@@ -144,17 +149,29 @@ class DetalleProducto(models.Model):
         day = (self.fechavencimiento.day - today.day)
         totalyear = (year * 12)
         meses = (month + totalyear)
-        if(meses < 1 and day < 1):
+        if(self.cantidad <= 0):
+            return format_html(
+                '<center> <p style="color: #FF0000;">'
+                'Sin existencia </p></center>'
+                )
+        elif(meses <= 0 and day <= 0):
             return format_html(
                 '<center> <p style="color: #FF0000;">'
                 'Producto Vencido </p></center>'
                 )
+        elif(meses > 1):
+            return (str(month + totalyear) + (' Meses '))
         elif(meses == 1):
             meses = meses*30
             return (str(day + meses) + (' días '))
-        else:
-            return (str(month + totalyear) + (' Meses '))
-    fechaq.short_description = 'Meses a Vencerse'
+        elif(meses <= 0):
+            return (str(day + meses) + (' días '))
+        elif(day <= 0):
+            return format_html(
+                '<center> <p style="color: #FF0000;">'
+                'Producto Vencido </p></center>'
+                )
+    fechaq.short_description = 'Fecha a Vencer'
 
         # super(DetalleProducto, self).clean()
         # fe = self.fechaq
