@@ -6,6 +6,7 @@ from django.db.models import Sum, F
 from django.utils.html import format_html
 from datetime import date
 from datetime import datetime
+from django.utils import timezone
 # Create your models here.
 
 
@@ -34,11 +35,11 @@ class Producto(models.Model):
     def Pro(self):
         if self.existencia <= 10:
             return format_html(
-                '<center><h1 style="color: #FF0000;">' + str(self.existencia) + '</h1></center>'
+                '<h1 style="color: #FF0000;">' + str(self.existencia) + '</h1>'
                 )
         else:
             return format_html(
-                '<center><h1 style="color: #D7DF01;">' + str(self.existencia) + '</h1></center>'
+                '<h1 style="color: #2874A6;">' + str(self.existencia) + '</h1>'
                 )
     Pro.short_description = 'Existencias'
 
@@ -62,6 +63,20 @@ class ubicacion(models.Model):
         verbose_name_plural = 'Ubicaciones'
 
 
+# class NumeroLote(models.Model):
+#    NumLote = models.CharField(
+#        'Numero de Lote',
+#        max_length=150, null=True, default='1')
+
+#    def __str__(self):
+#        return "%s " % (self.NumLote)
+
+#    class Meta:
+#        db_table = 'NumeroLote'
+#        verbose_name = 'Numero de Lote'
+#        verbose_name_plural = 'Numeros de Lotes'
+
+
 class DetalleProducto(models.Model):
     producto = models.ForeignKey(
         Producto, on_delete=models.CASCADE, null=False, blank=False,
@@ -69,6 +84,10 @@ class DetalleProducto(models.Model):
     numeroloteproducto = models.CharField(
         'Numero de lote del Producto',
         max_length=150, null=False)
+    FechaCompra = models.DateField(
+        'FechaCompra')
+    #numeroloteproducto = models.ForeignKey(
+    #    NumeroLote, on_delete=models.CASCADE, null=True, blank=True)
     cantidad = models.PositiveIntegerField(
         'Cantidad', null=True, default=0)
     preciocompra = models.FloatField(
@@ -149,12 +168,12 @@ class DetalleProducto(models.Model):
         day = (self.fechavencimiento.day - today.day)
         totalyear = (year * 12)
         meses = (month + totalyear)
-        if(self.cantidad <= 0):
-            return format_html(
-                '<center> <p style="color: #FF0000;">'
-                'Sin existencia </p></center>'
-                )
-        elif(meses <= 0 and day <= 0):
+        # if(self.cantidad <= 0):
+        #    return format_html(
+        #        '<center> <p style="color: #FF0000;">'
+        #        'Sin existencia </p></center>'
+        #        )
+        if(meses <= 0 and day <= 0):
             return format_html(
                 '<center> <p style="color: #FF0000;">'
                 'Producto Vencido </p></center>'

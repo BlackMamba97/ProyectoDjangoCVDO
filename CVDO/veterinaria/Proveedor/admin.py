@@ -15,6 +15,7 @@ class ProveedorResource(resources.ModelResource):
 class ProveedorAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ['nombre']
     list_display = ['nombre', 'telefono', 'direccion']
+    search_fields = ['nombre']
     resourse_class = ProveedorResource
 
 admin.site.register(Proveedor, ProveedorAdmin)

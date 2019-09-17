@@ -9,6 +9,7 @@ from django.db.models import Count
 
 class detalle_productoInLine(admin.TabularInline):
     readonly_fields = [
+        'FechaCompra',
         'cantidad',
         'numeroloteproducto',
         'preciocompra',
@@ -35,15 +36,23 @@ class ubica_Admin(admin.ModelAdmin):
         list_filter = ['ubicacionproducto']
 
 
+#class Numero_Admin(admin.ModelAdmin):
+#    class Meta:
+#       model = NumeroLote
+#        list_filter = ['numeroloteproducto']
+
+
 class Producto_Admin(admin.ModelAdmin):
     list_display = ['image_img', 'nombre', 'Pro']
     list_filter = ['nombre', 'existencia']
     inlines = [detalle_productoInLine]
     resourse_class = ProductoResource
     search_fields = ['nombre']
+    list_per_page = 15
     readonly_fields = [
         'existencia',
         ]
 
 admin.site.register(Producto, Producto_Admin)
 admin.site.register(ubicacion, ubica_Admin)
+# admin.site.register(NumeroLote, Numero_Admin)

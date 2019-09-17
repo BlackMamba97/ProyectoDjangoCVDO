@@ -148,4 +148,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # AUTH_USER_MODEL = 'usuarios.Empleado'
-JQUERY_URL = True
+USE_DJANGO_JQUERY = False
+#DJANGO_JQUERY = True

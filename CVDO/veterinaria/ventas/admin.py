@@ -11,6 +11,7 @@ class detalle_ventaInline(admin.TabularInline):
     model = DetalleVenta
     extra = 1
     readonly_fields = ['subtotal']
+    autocomplete_fields = ['producto']
 
 
 class comprobanteResource(resources.ModelResource):
@@ -34,6 +35,9 @@ class ComprobanteVentaAdmin(ExportMixin, admin.ModelAdmin):
     inlines = [detalle_ventaInline]
     resourse_class = comprobanteResource
     readonly_fields = ['total']
+    # raw_id_fields = ['cliente']
+    list_per_page = 10
+    autocomplete_fields = ['cliente']
 
 admin.site.register(TipoPago)
 admin.site.register(ComprobanteVenta, ComprobanteVentaAdmin)

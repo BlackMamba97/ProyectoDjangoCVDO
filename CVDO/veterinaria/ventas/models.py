@@ -1,8 +1,10 @@
 from django.db import models
 from cliente.models import Cliente
 from productos.models import Producto, DetalleProducto
+
 # Create your models here.
-from smart_selects.db_fields import ChainedForeignKey
+# from smart_selects.db_fields import ChainedForeignKey
+# from smart_selects.db_fields import GroupedForeignKey
 
 
 class TipoPago(models.Model):
@@ -14,7 +16,10 @@ class TipoPago(models.Model):
 
 class ComprobanteVenta(models.Model):
     fecha = models.DateField('Fecha de Venta')
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
+    #cliente = models.ForeignKey(
+    #     Cliente, on_delete=models.CASCADE, null=False)
+    cliente = models.ForeignKey(
+        Cliente, on_delete=models.CASCADE, null=False)
     total = models.FloatField('Total', null=False, default=0.00)
     pago = models.ForeignKey(TipoPago, on_delete=models.CASCADE, null=False)
     efectivo = models.FloatField('Efectivo', null=True, default=0.00)
@@ -39,12 +44,16 @@ class DetalleVenta(models.Model):
         related_name='eldetalle')
     producto = models.ForeignKey(
         Producto, on_delete=models.CASCADE, null=True)
-    # numlote = ChainedForeignKey(
-    #    DetalleProducto,
-    #    chained_field="numeroloteproducto",
-    #    chained_model_field="numeroloteproducto",
-    #    show_all=False,
-    #    )
+    #numlote = ChainedForeignKey(
+        #NumeroLote,
+        #chained_field="numeroloteproducto",
+        #chained_model_field="DetalleProducto",
+        #show_all=True, null=True, blank=True)
+        # auto_choose=True,
+        # sort=True)
+    #numlote = GroupedForeignKey(
+    #    NumeroLote, 'NumLote')
+    # print(numlote)
     cantidad = models.PositiveIntegerField('Cantidad', default=0)
     subtotal = models.FloatField(
         'subtotal', null=False, blank=False, default=0)
