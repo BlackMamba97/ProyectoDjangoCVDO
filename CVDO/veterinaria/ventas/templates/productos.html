@@ -1,0 +1,58 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style type="text/css">
+        body {
+        color: black;
+        background-color: #FF8000 }
+        </style>
+        <meta charset="utf-8">
+        <meta name="author" content="">
+        <title>Producto Número: {{ producto.id_producto }}</title>
+    </head>
+    <body>
+    <div id="content">
+		<h1>Variedades Toto's</h1>
+        <h2>DETALLES DE PRODUCTO</h2>
+            <table>
+                <tr>
+                    <th>
+                        Codigo:
+                    </th>
+                    <td >
+                        {{ producto.id_producto }}
+                    </td>                 
+                </tr>
+                <tr>
+                    <th>
+                        Nombre:
+                    </th>
+                    <td>
+                        {{ producto.nombre }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Descripcion:
+                    </th>
+                    <td>
+                        {{ producto.descripcion }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Cantidad:
+                    </th>
+                    <td>
+                        {{ producto.cantidad }}
+                    </td>
+                </tr>
+            </table>
+    </div>
+    </body>
+    </html>
+{% endblock %}

@@ -10,7 +10,7 @@ from django.db import transaction
 from datetime import date, datetime
 from productos.models import ubicacion
 from Proveedor.models import Proveedor
-from django.utils import timezone
+# from django.utils import timezone
 
 
 class tipo_pago(models.Model):
@@ -51,13 +51,13 @@ class detalle_compra(models.Model):
         Comprobante, on_delete=models.CASCADE, null=True, blank=True,
         related_name='Eldetalle')
     FechaCompra = models.DateField(
-        'Fecha de Compra', default=now)
+        'Fecha de Compra', default=now,)
     producto = models.ForeignKey(
         Producto, on_delete=models.CASCADE,
         null=True)
     numeroloteproducto = models.CharField(
        'Numero de lote',
-       max_length=20, null=True)
+       max_length=20, null=True, blank=True)
     # numeroloteproducto = models.ForeignKey(
     #    NumeroLote, on_delete=models.CASCADE, null=True, blank=True)
     cantidad = models.PositiveIntegerField(
@@ -138,7 +138,7 @@ class detalle_compra(models.Model):
                         target.precioventa = self.precioventa
                         target.numeroloteproducto = self.numeroloteproducto
                         # target.fechavencimiento == self.fechavencimiento
-                        target.cantidad = target.cantidad + self.cantidad
+                        # target.cantidad = target.cantidad + self.cantidad
                         target.ubicacion = self.ubicacion
                         target.save()
                     else:

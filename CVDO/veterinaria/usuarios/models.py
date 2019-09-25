@@ -20,7 +20,7 @@ class Empleado(models.Model):
     image_img.short_description = 'Imagen'
 
     def __str__(self):
-        return "%s " % (self.user)
+        return "%s " % (self.Empleado)
 
     class Meta:
         db_table = 'Empleado'

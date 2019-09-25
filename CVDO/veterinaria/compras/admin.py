@@ -20,7 +20,7 @@ class ComprobanteResource(resources.ModelResource):
 
 class ComprobanteAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ['fecha', 'total']
-    list_display = ['fecha', 'total', 'pago']
+    list_display = ['fecha', 'proveedor', 'total', 'pago']
     inlines = [detalle_compraInLine]
     resourse_class = ComprobanteResource
     readonly_fields = ['total']

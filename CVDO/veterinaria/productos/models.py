@@ -24,7 +24,7 @@ class Producto(models.Model):
         if self.image:
             return mark_safe(
                 '<img src="{url}" width="{width}" height={height} />'.format(
-                    url=self.image.url, width=100, height=100))
+                    url=self.image.url, width=50, height=50))
         else:
             return 'No existe imagen'
     image_img.short_description = 'Imagen'
@@ -35,11 +35,11 @@ class Producto(models.Model):
     def Pro(self):
         if self.existencia <= 10:
             return format_html(
-                '<h1 style="color: #FF0000;">' + str(self.existencia) + '</h1>'
+                '<p style="color: #FF0000;">' + str(self.existencia) + '</p>'
                 )
         else:
             return format_html(
-                '<h1 style="color: #2874A6;">' + str(self.existencia) + '</h1>'
+                '<p style="color: #2874A6;">' + str(self.existencia) + '</p>'
                 )
     Pro.short_description = 'Existencias'
 
@@ -52,7 +52,7 @@ class Producto(models.Model):
 class ubicacion(models.Model):
     ubicacionproducto = models.CharField(
         'Ubicacion del Producto',
-        max_length=150, null=True, default='Estante 1')
+        max_length=150, null=True)
 
     def __str__(self):
         return "%s " % (self.ubicacionproducto)
@@ -83,7 +83,7 @@ class DetalleProducto(models.Model):
         related_name='elproducto')
     numeroloteproducto = models.CharField(
         'Numero de lote del Producto',
-        max_length=150, null=False)
+        max_length=150, null=True, blank=True)
     FechaCompra = models.DateField(
         'FechaCompra')
     #numeroloteproducto = models.ForeignKey(

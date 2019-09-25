@@ -5,6 +5,7 @@ from . models import *
 from import_export import resources
 from import_export import fields
 from import_export.admin import ExportMixin
+from usuarios.models import Empleado
 
 
 class detalle_ventaInline(admin.TabularInline):
@@ -20,24 +21,34 @@ class comprobanteResource(resources.ModelResource):
         fields = [
             'fecha',
             'total',
-            'pago'
+            'pago',
+            'vendedor',
         ]
         export_order = [
             'fecha',
             'total',
-            'pago'
+            'pago',
+            'vendedor',
         ]
 
 
 class ComprobanteVentaAdmin(ExportMixin, admin.ModelAdmin):
-    list_filter = ['fecha', 'total']
-    list_display = ['fecha', 'total', 'pago', 'vuelto']
+    list_filter = ['fecha', 'total', 'vendedor']
+    list_display = ['fecha', 'vendedor', 'total', 'pago', 'vuelto', 'compro']
     inlines = [detalle_ventaInline]
     resourse_class = comprobanteResource
     readonly_fields = ['total']
     # raw_id_fields = ['cliente']
     list_per_page = 10
     autocomplete_fields = ['cliente']
+
+    def get_form(self, request, *args, **kwargs):
+        form = super(ComprobanteVentaAdmin, self).get_form(
+            request, *args, **kwargs)
+        usuario = request.user
+        # empleado = Empleado.objects.filter(Empleado=usuario.id)
+        form.base_fields['vendedor'].initial = usuario
+        return form
 
 admin.site.register(TipoPago)
 admin.site.register(ComprobanteVenta, ComprobanteVentaAdmin)
