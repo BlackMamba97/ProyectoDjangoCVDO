@@ -19,9 +19,9 @@ class detalle_productoInLine(admin.TabularInline):
         'fechaq',
         'estadoo',
     ]
-
     model = DetalleProducto
     extra = 0
+    ordering = ['fechavencimiento']
 
 
 class ProductoResource(resources.ModelResource):

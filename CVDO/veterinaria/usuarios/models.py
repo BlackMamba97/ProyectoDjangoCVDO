@@ -8,7 +8,7 @@ class Empleado(models.Model):
     image = models.ImageField('Ingrese Foto', null=True, blank=True)
     Empleado = models.OneToOneField(User, on_delete=models.CASCADE)
     Sueldo = models.PositiveIntegerField('Sueldo', null=False, blank=False)
-    comision = models.PositiveIntegerField('Comision', null=False, blank=False)
+    comision = models.FloatField('Comision', null=False, blank=False)
 
     def image_img(self):
         if self.image:

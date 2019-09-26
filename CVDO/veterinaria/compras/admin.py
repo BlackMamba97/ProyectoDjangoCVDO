@@ -7,7 +7,17 @@ from import_export import resources
 class detalle_compraInLine(admin.TabularInline):
     model = detalle_compra
     extra = 1
-    readonly_fields = ['subtotal', 'FechaCompra']
+    fields = [
+        'comprobante',
+        ('producto', 'numeroloteproducto'),
+        'cantidad',
+        'fechavencimiento',
+        'ubicacion',
+        ('preciocompra', 'precioventa'),
+        'subtotal'
+    ]
+    help_text = 'Ingrese El Producto'
+    readonly_fields = ['subtotal'] # , 'FechaCompra']
     autocomplete_fields = ['producto']
 
 
@@ -22,6 +32,7 @@ class ComprobanteAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ['fecha', 'total']
     list_display = ['fecha', 'proveedor', 'total', 'pago']
     inlines = [detalle_compraInLine]
+    fields = ['fecha', 'proveedor', ('total', 'pago')]
     resourse_class = ComprobanteResource
     readonly_fields = ['total']
     # raw_id_fields = ['proveedor']

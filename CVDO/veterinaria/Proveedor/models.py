@@ -7,7 +7,7 @@ class Proveedor(models.Model):
     nit = models.CharField('NIT', max_length=11, )
     nombre = models.CharField('Nombre', max_length=80)
     direccion = models.CharField('Direccion', max_length=150)
-    telefono = models.PositiveIntegerField('Telefono')
+    telefono = models.CharField('Telefono', max_length=15)
 
     def __str__(self):
         return "%s  %s" % (self.nombre, self.direccion)

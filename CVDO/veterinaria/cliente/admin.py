@@ -18,7 +18,7 @@ class ClienteAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ['NIT', 'nombre', 'apellido', 'direccion', 'telefono']
     search_fields = ['nombre', 'NIT', 'apellido']
     resourse_class = ClienteResource
-    list_per_page = 2
+    list_per_page = 15
     ordering = ['NIT']
 
 

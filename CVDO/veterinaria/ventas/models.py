@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.db.models import Sum, F
 from django.db.models.signals import post_save
 from usuarios.models import Empleado
+from datetime import date
 # Create your models here.
 # from smart_selects.db_fields import ChainedForeignKey
 # from smart_selects.db_fields import GroupedForeignKey
@@ -21,7 +22,7 @@ class TipoPago(models.Model):
 
 
 class ComprobanteVenta(models.Model):
-    fecha = models.DateField('Fecha de Venta')
+    fecha = models.DateField('Fecha de Venta', default=date.today)
     #cliente = models.ForeignKey(
     #     Cliente, on_delete=models.CASCADE, null=False)
     cliente = models.ForeignKey(
@@ -35,6 +36,10 @@ class ComprobanteVenta(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.fecha, self.cliente)
+
+    # def comisi(self):
+    #    ven = Empleado.objects.filter(Empleado=self.vendedor)
+    #        ven.comision = ven.comision + ()
 
     def save(self, *args, **kwargs):
         self.vuelto = self.efectivo - self.total
@@ -61,12 +66,62 @@ class DetalleVenta(models.Model):
        'Numero de lote',
        max_length=20, null=True, blank=True)
     cantidad = models.PositiveIntegerField('Cantidad', default=0)
+    comis = models.FloatField('Comision', default=0)
     subtotal = models.FloatField(
         'subtotal', null=False, blank=False, default=0)
 
     def preciov(self):
         precio = self.subtotal/self.cantidad
         return precio
+
+    def clean(self):
+        prode = DetalleProducto.objects.filter(
+                producto=self.producto).first()
+        det = DetalleProducto.objects.filter(
+            producto=self.producto).all()
+        pro = Producto.objects.filter(
+                        nombre=self.producto.nombre).get()
+        if prode.fechavencimiento is None:
+            for i in det:
+                de = i
+                if de.cantidad > 0:
+                    if self.cantidad > pro.existencia:
+                        raise ValidationError(
+                            ' No tenemos en existencia{}'.format(
+                                self.cantidad) +
+                            ' solo contamos con {}'.format(
+                                pro.existencia))
+                    else:
+                        if de.cantidad >= self.cantidad:
+                            ()
+                        else:
+                            raise ValidationError(
+                                ' Verifique las existencias ya que varían los precios de {}'.format(
+                                    de.producto))
+                else:
+                    ()
+        else:
+            if self.numeroloteproducto is None:
+                        raise ValidationError(
+                            ' Este Producto necesita ingresar Numero de Lote para ser vendido')
+            else:
+                prod = DetalleProducto.objects.filter(
+                    numeroloteproducto=self.numeroloteproducto).get()
+                pro = Producto.objects.filter(
+                    nombre=self.producto.nombre).get()
+                if pro.existencia >= self.cantidad:
+                    if prod.cantidad >= self.cantidad:
+                        ()
+                    else:
+                        raise ValidationError(
+                            'Este numero de lote solo cuenta con {}'.format(
+                                prod.cantidad) + ' unidades')
+                else:
+                    raise ValidationError(
+                        ' No tenemos en existencia {}'.format(
+                            self.cantidad) +
+                        ' solo contamos con {}'.format(
+                            pro.existencia))
 
     def save(self, force_insert=False, force_update=False, using=None):
         prode = DetalleProducto.objects.filter(
@@ -79,50 +134,40 @@ class DetalleVenta(models.Model):
         with transaction.atomic():
             if isnew:
                 if prode.fechavencimiento is None:
-                    # detalle = DetalleProducto.objects.filter(
-                        # producto=self.producto).first()
-                    # ------------------------------------------------
-                    # reaqlizar el for por si existen varios        -
-                    # detalles cuando no existe fecha de vencimiento-
-                    # ------------------------------------------------
-                    # pr = Producto.nombre
                     det = DetalleProducto.objects.filter(
                         producto=self.producto).all()
                     pro = Producto.objects.filter(
                         nombre=self.producto.nombre).get()
                     if pro == self.producto:
-                            print('cantidad a vender')
-                            print(self.cantidad)
-                            print('-------------')
-                            print('Existencias de Producto')
-                            print(pro.existencia)
-                            # print(pro)
-                            for i in det:
-                                de = i
-                                if de.cantidad > 0:
-                                    if self.cantidad > pro.existencia:
-                                        raise ValidationError(
-                                            ' No tenemos en existencia{}'.format(
-                                                self.cantidad) +
-                                            ' solo contamos con {}'.format(
-                                                pro.existencia))
-                                    else:
-                                        if de.cantidad > self.cantidad:
-                                            de.cantidad = (
-                                                de.cantidad - self.cantidad)
-                                            self.subtotal = (
-                                                self.cantidad * de.precioventa)
-                                            de.save()
-                                        else:
-                                            raise ValidationError(
-                                                ' Verifique las existencias ya que varían los precios de {}'.format(
-                                                    de.producto))
-                                else:
+                        for i in det:
+                            de = i
+                            if de.cantidad > 0:
+                                if self.cantidad > pro.existencia:
                                     ()
+                                else:
+                                    if de.cantidad >= self.cantidad:
+                                        de.cantidad = (
+                                            de.cantidad - self.cantidad)
+                                        self.subtotal = (
+                                            self.cantidad * de.precioventa)
+                                        self.comis = (
+                                            self.cantidad * de.precioventa * (
+                                                pro.porcentaje/100))
+                                        emp = Empleado.objects.filter(
+                                            Empleado=self.comprobante.vendedor.id).get()
+                                        print('---------------')
+                                        print(emp.comision)
+                                        print(emp)
+                                        emp.comision = emp.comision + self.comis
+                                        emp.save()
+                                        de.save()
+                                    else:
+                                        ()
+                            else:
+                                ()
                 else:
                     if self.numeroloteproducto is None:
-                        raise ValidationError(
-                            ' Este Producto necesita ingresar Numero de Lote para ser vendido')
+                        ()
                     else:
                         prod = DetalleProducto.objects.filter(
                             numeroloteproducto=self.numeroloteproducto).get()
@@ -132,17 +177,21 @@ class DetalleVenta(models.Model):
                             if prod.cantidad >= self.cantidad:
                                 prod.cantidad = (prod.cantidad - self.cantidad)
                                 self.subtotal = self.cantidad * prod.precioventa
+                                self.comis = (
+                                    self.cantidad * prod.precioventa * (
+                                        pro.porcentaje/100))
+                                emp = Empleado.objects.filter(
+                                    Empleado=self.comprobante.vendedor.id).get()
+                                print('---------------')
+                                print(emp.comision)
+                                print(emp)
+                                emp.comision = emp.comision + self.comis
+                                emp.save()
                                 prod.save()
                             else:
-                                raise ValidationError(
-                                    'Este numero de lote solo cuenta con {}'.format(
-                                        prod.cantidad) + ' unidades')
+                                ()
                         else:
-                            raise ValidationError(
-                             ' No tenemos en existencia {}'.format(
-                                    self.cantidad) +
-                                ' solo contamos con {}'.format(
-                                    pro.existencia))
+                            ()
         super(DetalleVenta, self).save(force_insert, force_update, using)
 
     class Meta:

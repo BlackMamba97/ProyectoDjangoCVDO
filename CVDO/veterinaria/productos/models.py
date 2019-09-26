@@ -14,7 +14,7 @@ class Producto(models.Model):
     image = models.ImageField('Ingrese Imagen', null=True, blank=True)
     nombre = models.CharField('Nombre', max_length=150)
     porcentaje = models.PositiveIntegerField(
-        'Porcentaje', blank=True, null=True)
+        'Porcentaje', blank=True, null=True, default=0)
     meses = models.PositiveIntegerField(
         'Meses a Vencerse', null=True, blank=True)
     existencia = models.PositiveIntegerField(
@@ -83,7 +83,7 @@ class DetalleProducto(models.Model):
         related_name='elproducto')
     numeroloteproducto = models.CharField(
         'Numero de lote del Producto',
-        max_length=150, null=True, blank=True)
+        max_length=50, null=True, blank=True)
     FechaCompra = models.DateField(
         'FechaCompra')
     #numeroloteproducto = models.ForeignKey(

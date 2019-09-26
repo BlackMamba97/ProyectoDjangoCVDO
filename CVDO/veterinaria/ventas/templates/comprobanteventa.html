@@ -108,7 +108,7 @@
         </center>
                 <h2><center><h1>Listado de Productos</h1></center></h2>
 
-    <table align="center" style="border:1px solid black">
+    <table align="center" style="border:0.5px solid black">
     <tr>
         <th>Cantidad</th>
         <th>Producto</th>
@@ -125,8 +125,17 @@
         </tr>
         <tr>
         {% endfor %}
-            <td colspan="3"><center>Total</center></td>
+        <td colspan="3"><center>Total</center></td>
         <td><center>{{ comprobante.total }}</center></td>
+        </tr>
+        <tr>
+        <td colspan="3"><center>Efectivo</center></td>
+        <td><center>{{ comprobante.efectivo }}</center></td>
+        </tr>
+        <tr>
+        <td colspan="3"><center>Vuelto</center></td>
+        <td><center>{{ comprobante.vuelto }}</center></td>
+        </tr>
         </tr>
     </table>
     <center><h1>Gracias por su compra</h1></center>

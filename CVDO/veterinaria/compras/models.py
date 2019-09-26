@@ -7,9 +7,10 @@ from django.dispatch import receiver
 from django.db.models import Sum, F
 from productos.models import Producto, DetalleProducto
 from django.db import transaction
-from datetime import date, datetime
+from datetime import date
 from productos.models import ubicacion
 from Proveedor.models import Proveedor
+# from django.utils import timezone
 # from django.utils import timezone
 
 
@@ -27,7 +28,7 @@ class tipo_pago(models.Model):
 
 class Comprobante(models.Model):
     # num_comprobante = models.IntegerField('num_comprobante')
-    fecha = models.DateField('fecha')
+    fecha = models.DateField('fecha', default=date.today)
     proveedor = models.ForeignKey(
         Proveedor, on_delete=models.CASCADE, null=True)
     total = models.FloatField('Total', null=True, default=0.00)
@@ -46,12 +47,12 @@ class Comprobante(models.Model):
 
 
 class detalle_compra(models.Model):
-    now = date.today()
+    now = date.today
     comprobante = models.ForeignKey(
         Comprobante, on_delete=models.CASCADE, null=True, blank=True,
         related_name='Eldetalle')
     FechaCompra = models.DateField(
-        'Fecha de Compra', default=now,)
+        'Fecha de Compra', default=now)
     producto = models.ForeignKey(
         Producto, on_delete=models.CASCADE,
         null=True)
@@ -129,7 +130,7 @@ class detalle_compra(models.Model):
                 #if self.numeroloteproducto != deta.numeroloteproducto or None:
                 if self.fechavencimiento is None:
                     targe = DetalleProducto.objects.filter(producto=self.producto).last()
-                    if targe == None:
+                    if targe is None:
                         target = DetalleProducto()
                         target.producto = self.producto
                         target.cantidad = self.cantidad
