@@ -14,7 +14,7 @@ class ClienteResource(resources.ModelResource):
 
 
 class ClienteAdmin(ExportMixin, admin.ModelAdmin):
-    list_filter = ['NIT', 'nombre', 'apellido']
+    list_filter = ['direccion']
     list_display = ['NIT', 'nombre', 'apellido', 'direccion', 'telefono']
     search_fields = ['nombre', 'NIT', 'apellido']
     resourse_class = ClienteResource

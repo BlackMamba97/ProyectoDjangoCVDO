@@ -1,0 +1,113 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+
+    <!DOCTYPE html>
+
+    <style>
+        @page {
+            size: letter landscape;
+            margin: 2cm;
+            @frame header {
+                -pdf-frame-content: page-header;
+                margin-top: 1.3cm;
+                margin-right: 2mm;
+                margin-bottom: 1cm;
+                margin-left: 1.2cm;
+            }
+        }
+        table {
+                border: 1px;
+                width: 100%;
+                border-collapse: collapse;
+                caption-side: center;
+                padding: 5px;
+        }
+        th, td, tr {
+            width: 30%;
+            text-align: center;
+            caption-side: center;
+            
+        }
+        h1{
+            width: 30%;
+            background-color: #27AE60
+        }
+    </style>
+    <html>
+    <head>
+        <style type="text/css">
+        body {
+            width: 35%;
+            text-align: center;
+        color: black;
+         }
+        </style>
+        <meta charset="utf-8">
+        <meta name="author" content="">
+        
+
+        <title>PRODUCTOS A OFERTAR</title>
+    </head>
+    <body>
+        <!--
+
+            estas dos lineas siguientes son mira 
+            hacen que la factura se encoja a ser fE
+
+        -->
+        <p><img src='../ventas/templates/LogoVeterinaria.png' class="img-fluid" width="250px" align="left"/>
+            <br clear="absmiddle"> CENTRO VETERINARIO DE ORIENTE</br>
+            <br clear="absmiddle"> MOLINO</br></p>
+    <div id="content">
+        <h1><center>Centro Veterinario de Oriente</center></h1>
+        <center><h1>Listado de Productos a Ofertar</h1></center>
+        <table align="center" style="border:0.5px solid black">
+            <tr>
+                <th>Producto</th>
+                <th>Fecha de Compra</th>
+                <th>Cantidad</th>
+                <th>Numero de Lote</th>
+                <th>Precio Costo</th>
+                <th>Precio Venta</th>
+                <th>fecha Vencimiento</th>
+                <th>Ubicación</th>
+                <th>Tiempo a Vencerse</th>
+                <th>Estado</th>
+            </tr>
+            
+            {% for deta1 in prods %}
+                {% if deta1.validador == True  %}
+                    <tr>
+                        <td><center>{{ deta1.producto.nombre }}</center></td>
+                        <td><center>{{ deta1.FechaCompra }}</center></td>
+                        <td><center>{{ deta1.cantidad }}</center></td>
+                        {% if deta1.numeroloteproducto == None %}
+                            <td><center>{{ 'Producto No cuenta con Numero de Lote' }}</center></td>
+                        {% else %}
+                            <td><center>{{ deta1.numeroloteproducto }}</center></td>
+                        {% endif %}
+                        <td><center>{{ deta1.preciocompra }}</center></td>
+                        <td><center>{{ deta1.precioventa }}</center></td>
+                        {% if deta1.fechavencimiento == None %}
+                            <td><center>{{ 'Producto No Perecedero' }}</center></td>
+                        {% else %}
+                            <td><center>{{ deta1.fechavencimiento }}</center></td>
+                        {% endif %}
+                        <td><center>{{ deta1.ubicacion }}</center></td>
+                        {% if deta1.fechavencimiento == None %}
+                            <td><center>{{ 'Producto No Perecedero' }}</center></td>
+                            <td><center>{{ 'Producto No Perecedero' }}</center></td>
+                        {% else %}
+                            <td><center>{{ deta1.fechaq }}</center></td>
+                            <td><center>{{ deta1.estadoo }}</center></td>
+                        {% endif %}
+                        
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+    </body>
+    </html>
+{% endblock %}

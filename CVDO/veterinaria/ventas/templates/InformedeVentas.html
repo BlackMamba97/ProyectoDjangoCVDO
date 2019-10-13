@@ -1,0 +1,89 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+
+    <!DOCTYPE html>
+
+    <style>
+        @page {
+            size: letter;
+            margin: 2cm;
+            @frame header {
+                -pdf-frame-content: page-header;
+                margin-top: 1.3cm;
+                margin-right: 2mm;
+                margin-bottom: 1cm;
+                margin-left: 1.2cm;
+            }
+        }
+        table {
+                border: 1px;
+                width: 100%;
+                border-collapse: collapse;
+                caption-side: center;
+                padding: 5px;
+        }
+        th, td, tr {
+            width: 30%;
+            text-align: center;
+            caption-side: center;
+        }
+        h1{
+            width: 30%;
+            background-color: #27AE60
+        }
+    </style>
+    <html>
+    <head>
+        <style type="text/css">
+        body {
+            width: 35%;
+            text-align: center;
+        color: black;
+         }
+        </style>
+        <meta charset="utf-8">
+        <meta name="author" content="">
+        
+
+        <title>Constancia de Compra</title>
+    </head>
+    <body>
+        <!--
+
+            estas dos lineas siguientes son mira 
+            hacen que la factura se encoja a ser fE
+
+        -->
+        <p><img src='../ventas/templates/LogoVeterinaria.png' class="img-fluid" width="250px" align="left"/>
+            <br clear="absmiddle"> CENTRO VETERINARIO DE ORIENTE</br>
+            <br clear="absmiddle"> MOLINO</br></p>
+    <div id="content">
+        <h1><center>Centro Veterinario de Oriente</center></h1>
+        <center><h1>Listado de Ventas</h1></center>
+        <table align="center" style="border:0.5px solid black">
+            <tr>
+                <th>Vendedor</th>
+                <th>Fecha de Venta</th>
+                <th>Direccion</th>
+                <th>Cliente</th>
+                <th>NIT</th>
+                <th>Tipo de Pago</th>
+                <th>Total</th>
+            </tr>
+            {% for deta1 in prods %}
+            <tr>
+                <td><center>{{ deta1.vendedor }}</center></td>
+                <td><center>{{ deta1.fecha }}</center></td>
+                <td><center>{{ deta1.cliente.direccion }}</center></td>
+                <td><center>{{ deta1.cliente }}</center></td>
+                <td><center>{{ deta1.cliente.NIT }}</center></td>
+                <td><center>{{ deta1.pago }}</center></td>
+                <td><center>{{ deta1.total }}</center></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </body>
+    </html>
+{% endblock %}

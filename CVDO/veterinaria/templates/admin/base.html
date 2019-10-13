@@ -6,7 +6,8 @@
 <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
 {% block extrastyle %}{% endblock %}
 {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
-{% block extrahead %}{% endblock %}
+{% block extrahead %}
+{% endblock %}
 {% block responsive %}
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
@@ -24,9 +25,8 @@
     <!-- Header -->
     <div id="header">
         <div id="branding">
-            <img src="{% static 'LogoVeterinaria.png'%}" class="img-fluid" height="90px"/>
+            <img src="{% static 'LogoVeterinaria.png'%}" class="img-fluid" height="110px"/>
         {% block branding %} 
-            
         {% endblock %}
         </div>
         {% block usertools %}
@@ -38,7 +38,8 @@
             {% endblock %}-->
             {% block userlinks %}
                 {% if site_url %}
-                    <a href="/admin/">{% trans 'View site' %}</a> /
+                <br>
+                    <a href="/admin/"><img src="/media/programa/home.png" width="15px"/>{% trans 'View site' %}</a> /
                 {% endif %}
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}
@@ -47,9 +48,9 @@
                     {% endif %}
                 {% endif %}
                 {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                <a href="{% url 'admin:password_change' %}"><img src="/media/programa/cambio.png" width="15px"/>{% trans 'Change password' %}</a> /
                 {% endif %}
-                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                <a href="{% url 'admin:logout' %}"><img src="/media/programa/session.png" width="15px"/>{% trans 'Log out' %}</a>
             {% endblock %}
         </div>
         {% endif %}
@@ -74,9 +75,11 @@
     {% endblock messages %}
 
     <!-- Content -->
+    <br>
+    <br>
     <div id="content" class="{% block coltype %}colM{% endblock %}">
         {% block pretitle %}{% endblock %}
-        {% block content_title %}{% if title %}<h1><!--{{ title }}-->Bienvenido {% firstof user.get_short_name user.get_username %} </h1>{% endif %}{% endblock %}
+        {% block content_title %}{% if title %}<h1><img src="/media/programa/user.png"/><!--{{ title }}-->    Bienvenido {% firstof user.get_short_name user.get_username %} </h1>{% endif %}{% endblock %}
         {% block content %}
         {% block object-tools %}{% endblock %}
         {{ content }}

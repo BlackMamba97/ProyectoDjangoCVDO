@@ -1,0 +1,144 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+
+    <!DOCTYPE html>
+
+    <style>
+        table {
+                border: 1px;
+                width: 100%;
+                border-collapse: collapse;
+                caption-side: center;
+                padding: 5px;
+        }
+        th, td, tr {
+            width: 30%;
+            text-align: center;
+            caption-side: center;
+        }
+        h1{
+            width: 30%;
+            background-color: #27AE60;
+            color: white;
+        }
+    </style>
+    <html>
+    <head>
+        <style type="text/css">
+        body {
+            width: 35%;
+            text-align: center;
+        color: black;
+         }
+        </style>
+        <meta charset="utf-8">
+        <meta name="author" content="">
+        
+
+        <title>Constancia de Compra</title>
+    </head>
+    <body>
+        <!--
+
+            estas dos lineas siguientes son mira 
+            hacen que la factura se encoja a ser fE
+
+        -->
+        <p><img src='../ventas/templates/LogoVeterinaria.png' class="img-fluid" width="250px" align="left"/>
+            <br clear="absmiddle"> CENTRO VETERINARIO DE ORIENTE</br>
+            <br clear="absmiddle"> MOLINO</br></p>
+    <div id="content">
+
+		<h1><center>Centro Veterinario de Oriente</center></h1>
+        <h1><center>COMPROBANTE DE VENTA</center></h1>
+        <h2><Center>Datos del Cliente</Center></h2>
+        <center>
+            <table border="0.5" align="center">
+                <tr>
+                    <th>
+                        Vendedor:
+                    </th>
+                    
+                    <td >
+                        {{ comprobante.vendedor }}
+                    </td>             
+                </tr>
+                <tr>
+                    <th>
+                        Fecha de Venta:
+                    </th>
+                    
+                    <td >
+                        {{ comprobante.fecha }}
+                    </td>             
+                </tr>
+                <tr>
+                    <th>
+                        Dirección:
+                    </th>
+
+                    <td>
+                        {{ comprobante.cliente.direccion }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Cliente:
+                    </th>
+                    <td>
+                        {{ comprobante.cliente }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        NIT:
+                    </th>
+                    <td>
+                        {{ comprobante.cliente.NIT }}
+                    </td>
+                </tr>
+				<tr>
+                    <th>
+                        Tipo de Pago:
+                    </th>
+                    <td>
+                        {{ comprobante.pago }}
+                    </td>
+                </tr>
+            </table>
+        </center>
+                <h2><center><h1>Listado de Productos</h1></center></h2>
+
+    <table align="center" style="border:0.5px solid black">
+    <tr>
+        <th>Cantidad</th>
+        <th>Producto</th>
+        <th>Precio de Venta</th>
+        <th>Subtotal</th>
+    </tr>
+    {% for deta1 in detalle %}
+        <td><center>{{ deta1.cantidad }}</center></td>
+        <td><center>{{ deta1.producto }}</center></td>
+        <td><center>{{ deta1.preciov }}</center></td>
+        <td><center>{{ deta1.subtotal }}</center></td>
+        <tr>
+        {% endfor %}
+        <td colspan="3"><center>Total</center></td>
+        <td><center>{{ comprobante.total }}</center></td>
+        </tr>
+        <tr>
+        <td colspan="3"><center>Efectivo</center></td>
+        <td><center>{{ comprobante.efectivo }}</center></td>
+        </tr>
+        <tr>
+        <td colspan="3"><center>Vuelto</center></td>
+        <td><center>{{ comprobante.vuelto }}</center></td>
+        </tr>
+        </tr>
+    </table>
+    <center><h1>Gracias por su compra</h1></center>
+    </div>
+    </body>
+    </html>
+{% endblock %}

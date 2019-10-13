@@ -10,11 +10,10 @@ from django.db import transaction
 from datetime import date
 from productos.models import ubicacion
 from Proveedor.models import Proveedor
-# from django.utils import timezone
-# from django.utils import timezone
 
 
 class tipo_pago(models.Model):
+    # se crea la clase tipo_pago
     pago = models.CharField('Pago', max_length=20)
 
     def __str__(self):
@@ -27,10 +26,13 @@ class tipo_pago(models.Model):
 
 
 class Comprobante(models.Model):
-    # num_comprobante = models.IntegerField('num_comprobante')
+    # se crea la clase comprobante la cual sera la encargada
+    # de administrar todas las compras en el sistema
     fecha = models.DateField('fecha', default=date.today)
+    # se activa la acción para ingresar la fecha automaticamente
     proveedor = models.ForeignKey(
         Proveedor, on_delete=models.CASCADE, null=True)
+    # se crea una foranea para redirigir a la tabla proveedores
     total = models.FloatField('Total', null=True, default=0.00)
     pago = models.ForeignKey(tipo_pago, on_delete=models.CASCADE, null=False)
 
@@ -40,6 +42,13 @@ class Comprobante(models.Model):
     def save(self, *args, **kwargs):
         super(Comprobante, self).save(*args, **kwargs)
 
+    def compro(self):
+        # se crea un metodo para generar el informe de la compra
+        # al momento de presionar la imagen de la impresora
+        return mark_safe(
+            u'<center><a href="/comprobantecompra/?id=%s" target="_blank"><img src="/media/programa/impresora.png"/></a></center>' % self.id)
+    compro.short_description = 'Comprobante de Compra'
+
     class Meta:
         db_table = 'ComprobanteCompra'
         verbose_name = 'Comprobante de Compra'
@@ -47,6 +56,7 @@ class Comprobante(models.Model):
 
 
 class detalle_compra(models.Model):
+    # se crea el detalle de la compra
     now = date.today
     comprobante = models.ForeignKey(
         Comprobante, on_delete=models.CASCADE, null=True, blank=True,
@@ -59,8 +69,6 @@ class detalle_compra(models.Model):
     numeroloteproducto = models.CharField(
        'Numero de lote',
        max_length=20, null=True, blank=True)
-    # numeroloteproducto = models.ForeignKey(
-    #    NumeroLote, on_delete=models.CASCADE, null=True, blank=True)
     cantidad = models.PositiveIntegerField(
         'Cantidad', null=True, default=0)
     preciocompra = models.FloatField(
@@ -74,50 +82,48 @@ class detalle_compra(models.Model):
     subtotal = models.FloatField(
         'subtotal', null=True, blank=True, default=0.00)
 
-    # def clean(self):
-    #    if not self.pk:
-    #        isnew = True
-    #    else:
-    #        isnew = False
-    #    with transaction.atomic():
-    #        if isnew:
-    #            detalle = DetalleProducto.objects.all()
-    #            for i in detalle:
-    #                detalle = i
-    #                if(detalle.numeroloteproducto != self.numeroloteproducto):
-    #                    ()
-    #                else:
-    #                    raise ValidationError(
-    #                                'El lote número {}'.format(
-    #                                    self.numeroloteproducto) +
-    #                                ' ya existe')
-    #        else:
-    #            ()
-        # deta2.save()
+    def clean(self):
+        # se crea metodo clean el cual se detonará antes de guardar
+        if not self.pk:
+            # si no existe una pk que representa si existe un
+            # detalle
+            isnew = True
+            # la variable isnew se vuelve True
+        else:
+            # si no
+            isnew = False
+            # la variable isnew se vuelve False
 
-       # deta = DetalleProducto.objects.filter(
-        #    producto=self.producto).last()
-        #if not self.pk:
-        #    isnew = True
-        #else:
-        #    isnew = False
-        #with transaction.atomic():
-        #    if isnew:
-                # uno = self.lote
-                # dos = deta
-                #if uno != dos:
-                    #raise ValidationError(
-                                #'El lote número {}'.format(
-                                #    uno
-                                #    ) +
-                                # ' no coincide con el ultimo ingresado {}'.format(
-                                #     dos)
-                                # )
-        # deta.save()
+        with transaction.atomic():
+            if isnew:
+                deta = DetalleProducto.objects.filter(producto=self.producto)
+                # se crea deta que almacena todos los detalles
+                # de productos filtrandolos por producto
+                for delta in deta:
+                    # se crea un ciclo que recorra el detalle
+                    # de todos los productos
+                    if self.fechavencimiento is None:
+                        # si no existe fechavencimiento
+                        # en el producto ingresado
+                        ()
+                    else:
+                        # si no
+                        if self.numeroloteproducto is None:
+                            # verifique si exista numero de lote
+                            # en el producto ingresado
+                            raise ValidationError(
+                                'El producto debe tener un numero de lote asignado')
+                            # retorna la leyenda El producto
+                            # debe tener un num de lote
+                        else:
+                            ()
+                            # no hace nada
 
     def save(self, force_insert=False, force_update=False, using=None):
-        # deta = DetalleProducto.objects.all().last()
+        # se crea el metodo save el cual detonará las acciones despues
+        # de apachar el boton grabar
         self.subtotal = self.cantidad * self.preciocompra
+        # define que el subtotal sera igual a la cantida dy el precio de compra
         if not self.pk:
             isnew = True
         else:
@@ -125,12 +131,12 @@ class detalle_compra(models.Model):
 
         with transaction.atomic():
             if isnew:
-                #deta = DetalleProducto.objects.filter(
-                 #      producto=self.producto).last()
-                #if self.numeroloteproducto != deta.numeroloteproducto or None:
                 if self.fechavencimiento is None:
-                    targe = DetalleProducto.objects.filter(producto=self.producto).last()
+                    # si la fechavencimiento es nulo
+                    targe = DetalleProducto.objects.filter(
+                        producto=self.producto).last()
                     if targe is None:
+                        # si no existe un detalle de producto
                         target = DetalleProducto()
                         target.producto = self.producto
                         target.cantidad = self.cantidad
@@ -138,15 +144,23 @@ class detalle_compra(models.Model):
                         target.preciocompra = self.preciocompra
                         target.precioventa = self.precioventa
                         target.numeroloteproducto = self.numeroloteproducto
-                        # target.fechavencimiento == self.fechavencimiento
-                        # target.cantidad = target.cantidad + self.cantidad
+                        # se ingresan todos los datos y se guarda en detalle
+                        # de producto automaticamente
+
                         target.ubicacion = self.ubicacion
+                        # Se guarda el detalle de Producto
                         target.save()
                     else:
                         if self.preciocompra == targe.preciocompra and self.precioventa == targe.precioventa:
+                            # si el precio de compra es igual a algun preciocompra y precioventa
+                            # es igual a algun precio venta
+                            # unicamente actualiza la cantidad del detalle
                             targe.cantidad = targe.cantidad + self.cantidad
+                            # se graba el detalle del producto
                             targe.save()
                         else:
+                            # si no se parecen los precios
+                            # ingresa todos los datos
                             target = DetalleProducto()
                             target.producto = self.producto
                             target.cantidad = self.cantidad
@@ -154,55 +168,50 @@ class detalle_compra(models.Model):
                             target.preciocompra = self.preciocompra
                             target.precioventa = self.precioventa
                             target.numeroloteproducto = self.numeroloteproducto
-                            # target.fechavencimiento == self.fechavencimiento
-                            #target.cantidad = target.cantidad + self.cantidad
                             target.ubicacion = self.ubicacion
+                            # target.estado = True
                             target.save()
-                    # target.save()
-                    # targe.save()
+                            # se graba el detalle del producto
                 else:
-                    target = DetalleProducto()
-                    target.producto = self.producto
-                    # print(self.producto)
-                    target.FechaCompra = self.FechaCompra
-                    target.cantidad = self.cantidad
-                    target.numeroloteproducto = self.numeroloteproducto
-                    target.preciocompra = self.preciocompra
-                    target.precioventa = self.precioventa
-                    # if self.fechavencimiento == "":
-                    #    ()
-                    # else:
-                    target.fechavencimiento = self.fechavencimiento
-                    # datetime.datetime.today()
-                    target.ubicacion = self.ubicacion
-
-                    # target.save()importante
-                    # estas son pruebas de save()
-                    target.save()
-                    # targe.save()
+                    if self.numeroloteproducto is None:
+                        ()
+                    else:
+                        # si existe numero de lote del producto
+                        target = DetalleProducto()
+                        target.producto = self.producto
+                        target.FechaCompra = self.FechaCompra
+                        target.cantidad = self.cantidad
+                        target.numeroloteproducto = self.numeroloteproducto
+                        target.preciocompra = self.preciocompra
+                        target.precioventa = self.precioventa
+                        target.fechavencimiento = self.fechavencimiento
+                        target.ubicacion = self.ubicacion
+                        # se ingresan los atributos
+                        # y se guardan los datos del detalle
+                        target.save()
             else:
                 ()
-                    #raise ValidationError(
-                    #    'El lote número {}'.format(self.numeroloteproducto) +
-                    #        ' ya existe')
             super(detalle_compra, self).save(force_insert, force_update, using)
-        # deta.save()
+
 # ------------------------------Metodo para ingresar a otro detalle---------------------------
 
     def eliminar(self):
+        # se crea el metodo eliminar
         detalle = DetalleProducto.objects.all()
         for i in detalle:
             if (
                 i.FechaCompra==self.FechaCompra and i.preciocompra==self.preciocompra and i.precioventa==self.precioventa or i.numeroloteproducto==self.numeroloteproducto and i.preciocompra==self.preciocompra and i.precioventa==self.precioventa):
                     detalle = i
+                    # Si los datos de fecha compra,preciocompra y precio venta
+                    # son iguales solo cambia la variable cantidad y
+                    # resta las existencias
                     detalle.cantidad = detalle.cantidad - self.cantidad
-                    print(i.numeroloteproducto)
-                    print(i.cantidad)
-                    print(i.producto)
-                    print(i.fechavencimiento)
+                    # y se guarda el detalle del producto
         detalle.save()
 
     def delete(self, *args, **kwargs):
+        # se define el metodo delete
+        # y se manda a llamar el metodo eliminar
         self.eliminar()
         super(detalle_compra, self).delete(*args, **kwargs)
 
@@ -214,6 +223,8 @@ class detalle_compra(models.Model):
 
 @receiver(post_save, sender=detalle_compra)
 def trigger_sumadevale(sender, **kwargs):
+    # se crea un trigger el cual sumara todos los subtotales de
+    # las compras y se sumaran al total de comprobante
     linea = kwargs.get('instance')
     fact = Comprobante.objects.get(id=linea.comprobante.id)
     fact.total = fact.Eldetalle.aggregate(total=Sum(F('subtotal')))['total']

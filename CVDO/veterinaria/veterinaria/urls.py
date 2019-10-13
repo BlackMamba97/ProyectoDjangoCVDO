@@ -18,12 +18,19 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from ventas.views import Comprobanteview
+from ventas.views import Comprobanteview, FichadeVentas
+from compras.views import Comprobantecompraview
+from productos.views import FichadeProductos, FichadeProductosproximos, FichadeProductosOrden
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('chaining/', include('smart_selects.urls')),
+    # path('chaining/', include('smart_selects.urls')),
     url(r"^comprobanteventa/(?P<id>)", Comprobanteview.as_view()),
+    url(r"^comprobantecompra/(?P<id>)", Comprobantecompraview.as_view()),
+    url(r"^InformeVentas/", FichadeVentas.as_view()),
+    url(r"^InformedeProductosVencidos/", FichadeProductos.as_view()),
+    url(r"^InformedeProductosdeOfertas/", FichadeProductosproximos.as_view()),
+    url(r"^InformedeProductosenOrden/", FichadeProductosOrden.as_view()),
     ]
 
 if settings.DEBUG:

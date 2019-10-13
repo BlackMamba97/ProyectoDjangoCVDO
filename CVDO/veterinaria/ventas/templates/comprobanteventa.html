@@ -5,6 +5,17 @@
     <!DOCTYPE html>
 
     <style>
+        @page {
+            size: letter;
+            margin: 2cm;
+            @frame header {
+                -pdf-frame-content: page-header;
+                margin-top: 1.3cm;
+                margin-right: 2mm;
+                margin-bottom: 1cm;
+                margin-left: 1.2cm;
+            }
+        }
         table {
                 border: 1px;
                 width: 100%;
@@ -19,7 +30,8 @@
         }
         h1{
             width: 30%;
-            background-color: #27AE60
+            background-color: #27AE60;
+            color: white;
         }
     </style>
     <html>
@@ -50,6 +62,7 @@
     <div id="content">
 
 		<h1><center>Centro Veterinario de Oriente</center></h1>
+        <h1><center>COMPROBANTE DE VENTA</center></h1>
         <h2><Center>Datos del Cliente</Center></h2>
         <center>
             <table border="0.5" align="center">
@@ -116,13 +129,10 @@
         <th>Subtotal</th>
     </tr>
     {% for deta1 in detalle %}
-        
-        <tr>
         <td><center>{{ deta1.cantidad }}</center></td>
         <td><center>{{ deta1.producto }}</center></td>
         <td><center>{{ deta1.preciov }}</center></td>
         <td><center>{{ deta1.subtotal }}</center></td>
-        </tr>
         <tr>
         {% endfor %}
         <td colspan="3"><center>Total</center></td>
