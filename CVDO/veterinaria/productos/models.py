@@ -84,6 +84,7 @@ class Productos_Empleado(Producto):
 
     class Meta:
         proxy = True
+# Productos_Empleado.short_description = 'Productos Empleados'
 
 
 class ubicacion(models.Model):
@@ -245,17 +246,12 @@ class DetalleProducto(models.Model):
         oferta = False
         fecha = month + totalyear
         pro = Producto.objects.all()
-        print('entra??????')
         # no = (self.producto)
-        print(pro)
         for i in pro:
             pro = i
             if(pro == self.producto):
                 if pro.meses is not None:
-                    print('nombre como estamos')
                     fecha2 = int(pro.meses)
-                    print(fecha)
-                    print(pro.meses)
                     if(self.cantidad <= 0):
                             pass
                     elif(meses < 1 and day < 1):
@@ -269,6 +265,11 @@ class DetalleProducto(models.Model):
                     pass
             else:
                     ()
+
+    def delete(self, *args, **kwargs):
+        self.producto.existencia = self.producto.existencia - self.cantidad
+        self.producto.save()
+        super(DetalleProducto, self).delete(*args, **kwargs)
 
     def __str__(self):
         return "%s " % (self.producto.nombre)

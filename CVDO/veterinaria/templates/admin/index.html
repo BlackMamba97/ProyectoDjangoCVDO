@@ -63,8 +63,20 @@
 {%if request.user.is_superuser %}
 <div id="content-related">
     <div class="module" id="recent-actions-module">
-        <a href="http://127.0.0.1:8000/InformedeProductosdeOfertas/" target="_blank">OFERTAS</a>
-        <a href="http://127.0.0.1:8000/InformedeProductosenOrden/" target="_blank">EN ORDEN</a>
+        <!-- Productos en Orden -->  
+        <CENTER><h2> Acciones para Productos </h2></CENTER>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosenOrden/" target="_blank">PRODUCTO EN ORDEN </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosenOrden/" target="_blank"><img src="/media/programa/bueno.png" width="50px"/></a></center>
+        <br>
+        <!-- Productos en Ofertas --> 
+        <center><a href="http://127.0.0.1:8000/InformedeProductosdeOfertas/" target="_blank">PRODUCTO A OFERTAR </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosdeOfertas/" target="_blank"><img src="/media/programa/oferta.png" width="50px"/></a></center>
+        <br>
+        <br>
+        <!-- Productos Vencidos --> 
+        <center><a href="http://127.0.0.1:8000/InformedeProductosVencidos/" target="_blank">PRODUCTO VENCIDO </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosVencidos/" target="_blank"><img src="/media/programa/vencido.png" width="50px"/></a></center>
+
         
         <h2>{% trans 'Recent actions' %}</h2>
         <h3>{% trans 'My actions' %}</h3>
@@ -91,7 +103,25 @@
             {% endfor %}
             </ul>
             {% endif %}
+    </div>
+</div>
 
+{% else %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <!-- Productos en Orden -->  
+        <CENTER><h2> Acciones para Productos </h2></CENTER>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosenOrden/" target="_blank">PRODUCTO EN ORDEN </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosenOrden/" target="_blank"><img src="/media/programa/bueno.png" width="50px"/></a></center>
+        <br>
+        <!-- Productos en Ofertas --> 
+        <center><a href="http://127.0.0.1:8000/InformedeProductosdeOfertas/" target="_blank">PRODUCTO A OFERTAR </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosdeOfertas/" target="_blank"><img src="/media/programa/oferta.png" width="50px"/></a></center>
+        <br>
+        <br>
+        <!-- Productos Vencidos --> 
+        <center><a href="http://127.0.0.1:8000/InformedeProductosVencidos/" target="_blank">PRODUCTO VENCIDO </a></center>
+        <center><a href="http://127.0.0.1:8000/InformedeProductosVencidos/" target="_blank"><img src="/media/programa/vencido.png" width="50px"/></a></center>
     </div>
 </div>
 {% endif %}

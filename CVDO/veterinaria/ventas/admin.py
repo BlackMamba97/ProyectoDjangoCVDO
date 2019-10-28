@@ -11,6 +11,12 @@ from django.shortcuts import redirect
 
 class detalle_ventaInline(admin.TabularInline):
     model = DetalleVenta
+    fields = [
+        'producto',
+        'numeroloteproducto',
+        'cantidad',
+        'subtotal'
+            ]
     extra = 1
     readonly_fields = [
         'comis',
@@ -39,13 +45,14 @@ class comprobanteResource(resources.ModelResource):
 class ComprobanteVentaAdmin(ExportMixin, admin.ModelAdmin):
     # se crea la clase comprobanteventa para
     #
-    list_filter = ['fecha', 'total', 'vendedor']
+    list_filter = ['fecha', 'vendedor']
     list_display = ['fecha', 'vendedor', 'total', 'pago', 'vuelto', 'compro']
     inlines = [detalle_ventaInline]
     resourse_class = comprobanteResource
     readonly_fields = ['total', 'vuelto']
     # raw_id_fields = ['cliente']
-    list_per_page = 10
+    list_per_page = 15
+    ordering = ['-fecha']
     actions = ['impr_prods']
     autocomplete_fields = ['cliente']
 

@@ -100,24 +100,31 @@ class detalle_compra(models.Model):
                 # se crea deta que almacena todos los detalles
                 # de productos filtrandolos por producto
                 for delta in deta:
+                    if self.numeroloteproducto != delta.numeroloteproducto or None:
                     # se crea un ciclo que recorra el detalle
                     # de todos los productos
-                    if self.fechavencimiento is None:
-                        # si no existe fechavencimiento
-                        # en el producto ingresado
-                        ()
-                    else:
-                        # si no
-                        if self.numeroloteproducto is None:
-                            # verifique si exista numero de lote
+                        pass
+                        if self.fechavencimiento is None:
+                            # si no existe fechavencimiento
                             # en el producto ingresado
-                            raise ValidationError(
-                                'El producto debe tener un numero de lote asignado')
-                            # retorna la leyenda El producto
-                            # debe tener un num de lote
-                        else:
                             ()
-                            # no hace nada
+                        else:
+                            # si no
+                            if self.numeroloteproducto is None:
+                                # verifique si exista numero de lote
+                                # en el producto ingresado
+                                raise ValidationError(
+                                    'El producto debe tener un numero de lote asignado')
+                                # retorna la leyenda El producto
+                                # debe tener un num de lote
+                            else:
+                                ()
+                                # no hace nada
+                    else:
+                        raise ValidationError(
+                            'El lote numero {}'.format(
+                                self.numeroloteproducto) +
+                            ' ya existe')
 
     def save(self, force_insert=False, force_update=False, using=None):
         # se crea el metodo save el cual detonará las acciones despues

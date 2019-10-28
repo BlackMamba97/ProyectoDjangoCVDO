@@ -36,7 +36,7 @@ class ComprobanteResource(resources.ModelResource):
 
 class ComprobanteAdmin(ExportMixin, admin.ModelAdmin):
     # creacion de la clase comprobante admin
-    list_filter = ['fecha', 'total']
+    list_filter = ['fecha', 'proveedor']
     # se crea el listado de filtraciones
     list_display = ['fecha', 'proveedor', 'total', 'pago', 'compro']
     # se crea el listado de despliegue
@@ -47,6 +47,7 @@ class ComprobanteAdmin(ExportMixin, admin.ModelAdmin):
     # el unico atributo de lectura será total
     # raw_id_fields = ['proveedor']
     list_per_page = 15
+    ordering = ['-fecha']
     autocomplete_fields = ['proveedor']
     # se genera el autocompletado para ingresar los proveedores
 

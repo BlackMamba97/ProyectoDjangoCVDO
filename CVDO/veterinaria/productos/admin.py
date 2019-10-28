@@ -56,7 +56,7 @@ class Producto_Admin(admin.ModelAdmin):
     # creación de clase Producto en el admin
     list_display = ['image_img', 'nombre', 'tipoProducto', 'Pro']
     # se definen los atributos de Producto que se van a mostrar en el listado
-    list_filter = ['nombre', 'existencia', 'tipoProducto']
+    list_filter = ['nombre', 'tipoProducto']
     # Se definen los atributos por los cuales se van a buscar los productos
     inlines = [detalle_productoInLine]
     # se define que tendra un atributo de tipo InLine en su modelo
@@ -66,11 +66,11 @@ class Producto_Admin(admin.ModelAdmin):
     list_per_page = 15
     # se define que solo se podrán desplegar 5 elementos de la lista
     # y despues se crearán pestallas
-    actions = [
-        'impr_prods',
-        'impr_prodofer',
-        'impr_prodorden',
-    ]
+    # actions = [
+    #    'impr_prods',
+    #    'impr_prodofer',
+    #    'impr_prodorden',
+    # ]
     readonly_fields = [
         # el unico atributo que sera de lectura seran las existencias
         'existencia',
@@ -117,7 +117,7 @@ class DetalleProducto_Empleado_Admin(admin.TabularInline):
 
 class Productos_Empleado_Admin(admin.ModelAdmin):
     list_display = ['image_img', 'nombre', 'Pro']
-    list_filter = ['nombre', 'existencia']
+    list_filter = ['nombre', 'tipoProducto']
     inlines = [DetalleProducto_Empleado_Admin]
     # resourse_class = ProductoResource
     fields = [
