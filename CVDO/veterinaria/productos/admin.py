@@ -88,6 +88,18 @@ class Producto_Admin(admin.ModelAdmin):
         return redirect('/InformedeProductosenOrden')
     impr_prodorden.short_description = 'Productos en Orden'
 
+    def impr_prods2(self, request, queryset):
+        return redirect('/InformedeProductosVencidos')
+    impr_prods.short_description = 'Productos Vencidos'
+
+    def impr_prodofer2(self, request, queryset):
+        return redirect('/InformedeProductosdeOfertas')
+    impr_prodofer.short_description = 'Productos a Ofertar'
+
+    def impr_prodorden2(self, request, queryset):
+        return redirect('/InformedeProductosenOrden')
+    impr_prodorden.short_description = 'Productos en Orden'
+
 
 class DetalleProducto_Empleado_Admin(admin.TabularInline):
     fields = [

@@ -77,7 +77,7 @@
             </tr>
             
             {% for deta1 in prods %}
-                {% if deta1.validador == True  %}
+                {% if deta1.fechavencimiento > day and deta1.validador == True %}
                     <tr>
                         <td><center>{{ deta1.producto.nombre }}</center></td>
                         <td><center>{{ deta1.FechaCompra }}</center></td>
@@ -102,7 +102,6 @@
                             <td><center>{{ deta1.fechaq }}</center></td>
                             <td><center>{{ deta1.estadoo }}</center></td>
                         {% endif %}
-                        
                     </tr>
                 {% endif %}
             {% endfor %}

@@ -213,8 +213,10 @@ class detalle_compra(models.Model):
                     # son iguales solo cambia la variable cantidad y
                     # resta las existencias
                     detalle.cantidad = detalle.cantidad - self.cantidad
+                    self.comprobante.total = self.comprobante.total - self.subtotal
                     # y se guarda el detalle del producto
         detalle.save()
+        self.comprobante.save()
 
     def delete(self, *args, **kwargs):
         # se define el metodo delete

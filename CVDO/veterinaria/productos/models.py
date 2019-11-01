@@ -139,6 +139,7 @@ class DetalleProducto(models.Model):
         # day muestra  la diferencia entre los dias de
         # la fecha vencimiento con la fecha actual
         day = (self.fechavencimiento.day - today.day)
+        daypro = (self.fechavencimiento)
         totalyear = (year * 12)
         meses = (month + totalyear)
         fecha = month + totalyear
@@ -173,16 +174,16 @@ class DetalleProducto(models.Model):
                         return format_html(
                             '<center> <p style="color: #0404B4;">Producto en Orden</p></center>'
                             )
+                    elif(self.fechavencimiento <= today):
+                        # Sino que retorne producto vencido
+                        return format_html(
+                                '<center> <p style="color: #B40404;">Producto Vencido</p> </center>'
+                                )
                     elif(meses <= fecha2):
                         # si variable meses es menor o igual que fecha 2
                         # que imprima en pantalla Producto se debe Ofertar
                         return format_html(
                             '<center> <p style="color: #FF4000;">Producto se debe Ofertar</p> </center>'
-                            )
-                else:
-                    # Sino que retorne producto vencido
-                    return format_html(
-                            '<center> <p style="color: #B40404;">Producto Vencido</p> </center>'
                             )
             else:
                     ()
@@ -209,6 +210,11 @@ class DetalleProducto(models.Model):
         # y la variable day es menor o igual a 0
         if(meses <= 0 and day <= 0):
             # que imprima producto vencido
+            return format_html(
+                '<center> <p style="color: #FF0000;">'
+                'Producto Vencido</p></center>'
+                )
+        elif(self.fechavencimiento < today):
             return format_html(
                 '<center> <p style="color: #FF0000;">'
                 'Producto Vencido</p></center>'

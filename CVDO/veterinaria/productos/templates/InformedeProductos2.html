@@ -5,7 +5,7 @@
     <!DOCTYPE html>
 
     <style>
-        @page {
+    @page {
             size: letter landscape;
             margin: 2cm;
             @frame header {
@@ -27,7 +27,6 @@
             width: 30%;
             text-align: center;
             caption-side: center;
-            
         }
         h1{
             width: 30%;
@@ -47,7 +46,7 @@
         <meta name="author" content="">
         
 
-        <title>PRODUCTOS EN ORDEN</title>
+        <title>PRODUCTOS VENCIDOS</title>
     </head>
     <body>
         <!--
@@ -61,52 +60,31 @@
             <br clear="absmiddle"> Tel. 4511-8106</br>
     <div id="content">
         <h1><center>Centro Veterinario de Oriente</center></h1>
-        <center><h1>Listado de Productos en Orden</h1></center>
+        <h1><center>Listado de Productos Vencidos</center></h1>
         <table align="center" style="border:0.5px solid black">
             <tr>
                 <th>Producto</th>
                 <th>Fecha de Compra</th>
                 <th>Cantidad</th>
                 <th>Numero de Lote</th>
-                <th>Precio Costo</th>
                 <th>Precio Venta</th>
                 <th>fecha Vencimiento</th>
                 <th>Ubicación</th>
-                <th>Tiempo a Vencerse</th>
                 <th>Estado</th>
             </tr>
             
             {% for deta1 in prods %}
-            {% if deta1.validador == True %}
-
-            {% else %}
-                    {% if deta1.fechavencimiento > day  or deta1.fechavencimiento == None%}
-                        <tr>
-                            <td><center>{{ deta1.producto.nombre }}</center></td>
-                            <td><center>{{ deta1.FechaCompra }}</center></td>
-                            <td><center>{{ deta1.cantidad }}</center></td>
-                            {% if deta1.numeroloteproducto == None %}
-                                <td><center>{{ 'Producto No cuenta con Numero de Lote' }}</center></td>
-                            {% else %}
-                                <td><center>{{ deta1.numeroloteproducto }}</center></td>
-                            {% endif %}
-                            <td><center>{{ deta1.preciocompra }}</center></td>
-                            <td><center>{{ deta1.precioventa }}</center></td>
-                            {% if deta1.fechavencimiento == None %}
-                                <td><center>{{ 'Producto No Perecedero' }}</center></td>
-                            {% else %}
-                                <td><center>{{ deta1.fechavencimiento }}</center></td>
-                            {% endif %}
-                            <td><center>{{ deta1.ubicacion }}</center></td>
-                            {% if deta1.fechavencimiento == None %}
-                                <td><center>{{ 'Producto No Perecedero' }}</center></td>
-                                <td><center>{{ 'Producto No Perecedero' }}</center></td>
-                            {% else %}
-                                <td><center>{{ deta1.fechaq }}</center></td>
-                                <td><center>{{ deta1.estadoo }}</center></td>
-                            {% endif %} 
-                        </tr>
-                    {% endif %}
+                {% if deta1.fechavencimiento <= day %}
+                <tr>
+                    <td><center>{{ deta1.producto.nombre }}</center></td>
+                    <td><center>{{ deta1.FechaCompra }}</center></td>
+                    <td><center>{{ deta1.cantidad }}</center></td>
+                    <td><center>{{ deta1.numeroloteproducto }}</center></td>
+                    <td><center>{{ deta1.precioventa }}</center></td>
+                    <td><center>{{ deta1.fechavencimiento }}</center></td>
+                    <td><center>{{ deta1.ubicacion }}</center></td>
+                    <td><center>{{ deta1.estadoo }}</center></td>
+                </tr>
                 {% endif %}
             {% endfor %}
         </table>

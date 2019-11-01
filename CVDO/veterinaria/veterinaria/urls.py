@@ -21,6 +21,7 @@ from django.urls import path, include
 from ventas.views import Comprobanteview, FichadeVentas
 from compras.views import Comprobantecompraview
 from productos.views import FichadeProductos, FichadeProductosproximos, FichadeProductosOrden
+from productos.views import FichadeProductos2, FichadeProductosproximos2, FichadeProductosOrden2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +32,10 @@ urlpatterns = [
     url(r"^InformedeProductosVencidos/", FichadeProductos.as_view()),
     url(r"^InformedeProductosdeOfertas/", FichadeProductosproximos.as_view()),
     url(r"^InformedeProductosenOrden/", FichadeProductosOrden.as_view()),
+    # ---------------------------
+    url(r"^InformedeProductosVencidos2/", FichadeProductos2.as_view()),
+    url(r"^InformedeProductosdeOfertas2/", FichadeProductosproximos2.as_view()),
+    url(r"^InformedeProductosenOrden2/", FichadeProductosOrden2.as_view()),
     ]
 
 if settings.DEBUG:

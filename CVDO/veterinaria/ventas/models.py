@@ -89,118 +89,138 @@ class DetalleVenta(models.Model):
         return precio
 
     def clean(self):
-        # se crea la accion de Clean el cual
-        # validará toda la información antes de
-        # guardar la información
-        prode = DetalleProducto.objects.filter(
-                producto=self.producto).first()
-        det = DetalleProducto.objects.filter(
-            producto=self.producto).all()
-        pro = Producto.objects.filter(
-                        nombre=self.producto.nombre).get()
-        if prode.fechavencimiento is None:
-            # si el producto ingresado en pantalla no tiene
-            # fecha de vencimiento entonces
-            # se genera un ciclo que recorre todos los
-            # detalles de productos
-            for i in det:
-                detonador = i
-                if detonador.numeroloteproducto == self.numeroloteproducto:
-                    # si el numerolote de  lavariable del ciclo
-                    # es igual a la que se acaba de ingresar entonces
-                    if detonador.cantidad > 0:
-                        # verifique que la cantidad de ese
-                        # producto sea mayor a 0
-                        # si es así
-                        if self.cantidad > pro.existencia:
-                            # verifique que la cantidad ingresada sea mayor a
-                            # la cantidad de existencias con las que cuenta el
-                            # producto
-                            raise ValidationError(
-                                # retorna que no hay existencias
-                                # para realizar esa venta
-                                ' No tenemos en existencia{}'.format(
-                                    self.cantidad) +
-                                ' solo contamos con {}'.format(
-                                    pro.existencia))
-                        else:
-                            # si la cantidad es menor que las existencias
-                            if detonador.cantidad >= self.cantidad:
-                                # verifica si la cantidad de el producto
-                                # con ese numero de lote es mayor o igual
-                                # se realiza la venta
-                                ()
-                            else:
-                                # si la cantidad del detalle es menor
-                                # retorna una alerta
-                                # de verificación
-                                raise ValidationError(
-                                    ' Verifique las existencias ya que varían los precios de {}'.format(
-                                        de.producto))
-                    else:
-                        # si la cantidad del producto es 0
-                        # no se puede vender ningun producto
-                        # porque no se cuenta con existencias
-                        ()
-                else:
-                    # si no existe ningun producto con el mismo numero de lote
-                    # retorna la leyenda el numero de lote ingresado no existe
-                    raise ValidationError(
-                        'El numero de lote ingresado no existe')
+        if not self.pk:
+            isnew = True
         else:
-            # si el articulo a venter no tiene fecha vencimiento
-            if self.numeroloteproducto is None:
-                # verifica si no cuenta con numero de lote
-                # si es así genera una alerta
-                        raise ValidationError(
-                            ' Este Producto necesita ingresar Numero de Lote para ser vendido')
-            else:
-                # si cuenta con numero de lote
-                try:
-                    prod = DetalleProducto.objects.filter(
-                        numeroloteproducto=self.numeroloteproducto).filter(
-                        producto=self.producto).get()
-                        # se crea una variable que obtenga los detalles de
-                        # producto filtrandolos por nombre
-                except DetalleProducto.DoesNotExist:
-                    # se genera una excepción xq no encuentra el numero de lote
-                    raise ValidationError(
-                                'El numero de lote no existe')
+            isnew = False
+
+        with transaction.atomic():
+            if isnew:
+                # se crea la accion de Clean el cual
+                # validará toda la información antes de
+                # guardar la información
+                prode = DetalleProducto.objects.filter(
+                        producto=self.producto).first()
+                det = DetalleProducto.objects.filter(
+                    producto=self.producto).all()
                 pro = Producto.objects.filter(
-                    nombre=self.producto.nombre).get()
-                # se crea variable pro para obtener los productos
-                # con el mismo nombre que el nombre que se ingreso
-                if prod.fechavencimiento > date.today():
-                    # se genera una condición si la fecha vencimiento es
-                    # mayor a el dia actual
-                    if pro.existencia >= self.cantidad:
-                        # verifique si hay mas existencias de las que
-                        # se solicitan en la venta
-                        if prod.cantidad >= self.cantidad:
-                            # verifica si el producto con ese numero de lote
-                            # cuenta con la cantidad que se solicita en la venta
-                            ()
+                                nombre=self.producto.nombre).get()
+                if prode.fechavencimiento is None:
+                    # si el producto ingresado en pantalla no tiene
+                    # fecha de vencimiento entonces
+                    # se genera un ciclo que recorre todos los
+                    # detalles de productos
+                    for i in det:
+                        detonador = i
+                        if detonador.numeroloteproducto == self.numeroloteproducto:
+                            # si el numerolote de  lavariable del ciclo
+                            # es igual a la que se acaba de ingresar entonces
+                            if detonador.cantidad > 0:
+                                # verifique que la cantidad de ese
+                                # producto sea mayor a 0
+                                # si es así
+                                if self.cantidad > pro.existencia:
+                                    # verifique que la cantidad ingresada sea mayor a
+                                    # la cantidad de existencias con las que cuenta el
+                                    # producto
+                                    raise ValidationError(
+                                        # retorna que no hay existencias
+                                        # para realizar esa venta
+                                        ' No tenemos en existencia{}'.format(
+                                            self.cantidad) +
+                                        ' solo contamos con {}'.format(
+                                            pro.existencia))
+                                else:
+                                    # si la cantidad es menor que las existencias
+                                    if detonador.cantidad >= self.cantidad:
+                                        # verifica si la cantidad de el producto
+                                        # con ese numero de lote es mayor o igual
+                                        # se realiza la venta
+                                        ()
+                                    else:
+                                        # si la cantidad del detalle es menor
+                                        # retorna una alerta
+                                        # de verificación
+                                        raise ValidationError(
+                                            ' Verifique las existencias ya que varían los precios de {}'.format(
+                                                de.producto))
+                            else:
+                                # si la cantidad del producto es 0
+                                # no se puede vender ningun producto
+                                # porque no se cuenta con existencias
+                                ()
                         else:
-                            # si no hay suficiente cantidad de producto
-                            # con ese numero de lote genera una alerta
+                            # si no existe ningun producto con el mismo numero de lote
+                            # retorna la leyenda el numero de lote ingresado no existe
                             raise ValidationError(
-                                'Este numero de lote solo cuenta con {}'.format(
-                                    prod.cantidad) + ' unidades')
-                    else:
-                        # si no hay existencias se genera una alerta
-                        raise ValidationError(
-                            ' No tenemos en existencia {}'.format(
-                                self.cantidad) +
-                            ' solo contamos con {}'.format(
-                                pro.existencia))
+                                'El numero de lote ingresado no existe')
                 else:
-                    # si el articulo esta vencido genera una alerta que indica
-                    # que el articulo esta vencido
-                    raise ValidationError(
-                            ' El producto con número de Lote {}'.format(
-                                self.numeroloteproducto) +
-                            ' vencía en la fecha {}'.format(
-                                prod.fechavencimiento))
+
+                    if self.cantidad > pro.existencia:
+                                    # verifique que la cantidad ingresada sea mayor a
+                                    # la cantidad de existencias con las que cuenta el
+                                    # producto
+                                    raise ValidationError(
+                                        # retorna que no hay existencias
+                                        # para realizar esa venta
+                                        ' No tenemos en existencia{}'.format(
+                                            self.cantidad) +
+                                        ' solo contamos con {}'.format(
+                                            pro.existencia))
+                        # si el articulo a venter no tiene fecha vencimiento
+                    else:
+                        if self.numeroloteproducto is None:
+                            # verifica si no cuenta con numero de lote
+                            # si es así genera una alerta
+                                    raise ValidationError(
+                                        ' Este Producto necesita ingresar Numero de Lote para ser vendido')
+                        else:
+                            # si cuenta con numero de lote
+                            try:
+                                prod = DetalleProducto.objects.filter(
+                                    numeroloteproducto=self.numeroloteproducto).filter(
+                                    producto=self.producto).get()
+                                    # se crea una variable que obtenga los detalles de
+                                    # producto filtrandolos por nombre
+                            except DetalleProducto.DoesNotExist:
+                                # se genera una excepción xq no encuentra el numero de lote
+                                raise ValidationError(
+                                            'El numero de lote no existe')
+                            pro = Producto.objects.filter(
+                                nombre=self.producto.nombre).get()
+                            # se crea variable pro para obtener los productos
+                            # con el mismo nombre que el nombre que se ingreso
+                            if prod.fechavencimiento > date.today():
+                                # se genera una condición si la fecha vencimiento es
+                                # mayor a el dia actual
+                                if pro.existencia >= self.cantidad:
+                                    # verifique si hay mas existencias de las que
+                                    # se solicitan en la venta
+                                    if prod.cantidad >= self.cantidad:
+                                        # verifica si el producto con ese numero de lote
+                                        # cuenta con la cantidad que se solicita en la venta
+                                        ()
+                                    else:
+                                        # si no hay suficiente cantidad de producto
+                                        # con ese numero de lote genera una alerta
+                                        raise ValidationError(
+                                            'Este numero de lote solo cuenta con {}'.format(
+                                                prod.cantidad) + ' unidades')
+                                else:
+                                    # si no hay existencias se genera una alerta
+                                    raise ValidationError(
+                                        ' No tenemos en existencia {}'.format(
+                                            self.cantidad) +
+                                        ' solo contamos con {}'.format(
+                                            pro.existencia))
+                            else:
+                                # si el articulo esta vencido genera una alerta que indica
+                                # que el articulo esta vencido
+                                raise ValidationError(
+                                        ' El producto con número de Lote {}'.format(
+                                            self.numeroloteproducto) +
+                                        ' vencía en la fecha {}'.format(
+                                            prod.fechavencimiento))
 
     def save(self, force_insert=False, force_update=False, using=None):
         prode = DetalleProducto.objects.filter(
@@ -248,6 +268,7 @@ class DetalleVenta(models.Model):
                             else:
                                 ()
                 else:
+
                     if self.numeroloteproducto is None:
                         ()
                     else:
@@ -292,10 +313,13 @@ class DetalleVenta(models.Model):
             if (
                 i.numeroloteproducto==self.numeroloteproducto  and i.precioventa==preci or i.precioventa==preci):
                     detpro = i
+                    self.comprobante.total = (
+                        self.comprobante.total - self.subtotal)
                     detpro.cantidad = detpro.cantidad + self.cantidad
                     emp = Empleado.objects.filter(
                         Empleado=self.comprobante.vendedor.id).get()
                     emp.comision = emp.comision - self.comis
+                    self.comprobante.save()
                     emp.save()
                     detpro.save()
 

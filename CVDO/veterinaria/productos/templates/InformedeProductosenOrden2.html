@@ -68,7 +68,6 @@
                 <th>Fecha de Compra</th>
                 <th>Cantidad</th>
                 <th>Numero de Lote</th>
-                <th>Precio Costo</th>
                 <th>Precio Venta</th>
                 <th>fecha Vencimiento</th>
                 <th>Ubicación</th>
@@ -90,7 +89,6 @@
                             {% else %}
                                 <td><center>{{ deta1.numeroloteproducto }}</center></td>
                             {% endif %}
-                            <td><center>{{ deta1.preciocompra }}</center></td>
                             <td><center>{{ deta1.precioventa }}</center></td>
                             {% if deta1.fechavencimiento == None %}
                                 <td><center>{{ 'Producto No Perecedero' }}</center></td>
@@ -104,7 +102,7 @@
                             {% else %}
                                 <td><center>{{ deta1.fechaq }}</center></td>
                                 <td><center>{{ deta1.estadoo }}</center></td>
-                            {% endif %} 
+                            {% endif %}
                         </tr>
                     {% endif %}
                 {% endif %}
