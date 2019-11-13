@@ -9,6 +9,9 @@ from django.db.models import Sum, F
 from django.db.models.signals import post_save
 from usuarios.models import Empleado
 from datetime import date
+from django.http import HttpResponse
+from django.contrib import messages
+import warnings
 
 
 class TipoPago(models.Model):
@@ -199,7 +202,23 @@ class DetalleVenta(models.Model):
                                     if prod.cantidad >= self.cantidad:
                                         # verifica si el producto con ese numero de lote
                                         # cuenta con la cantidad que se solicita en la venta
-                                        ()
+                                        det = DetalleProducto.objects.filter(
+                                            producto=self.producto).exclude(
+                                            cantidad=0).last()
+                                        if det.fechavencimiento > date.today() and det.numeroloteproducto==self.numeroloteproducto:
+                                            # raise messages.SUCCESS('Este lote es el adecuado')
+                                            # messages.success(request, 'Este lote es el adecuado.')
+                                            # obj.save()
+                                            # messages.add_message(request, messages.INFO, 'Este Lote es el adecuado')
+                                            # raise messages()
+                                            ()
+                                        else:
+                                            # raise messages.SUCCESS('Este lote no es el adecuado')
+                                            # messages.success(request, 'Este lote no es el adecuado.')
+                                            # obj.save()
+                                            # messages.add_message(request, messages.INFO, 'Este Lote No es el adecuado')
+                                            # raise messages("Este Lote No es el adecuado")
+                                            ()
                                     else:
                                         # si no hay suficiente cantidad de producto
                                         # con ese numero de lote genera una alerta
