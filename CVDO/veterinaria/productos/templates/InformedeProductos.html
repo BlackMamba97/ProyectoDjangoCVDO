@@ -6,7 +6,7 @@
 
     <style>
     @page {
-            size: letter landscape;
+            size: letter;
             margin: 2cm;
             @frame header {
                 -pdf-frame-content: page-header;
@@ -73,10 +73,10 @@
                 <th>Ubicación</th>
                 <th>Estado</th>
             </tr>
-            
             {% for deta1 in prods %}
                 {% if deta1.fechavencimiento <= day %}
                 <tr>
+                    
                     <td><center>{{ deta1.producto.nombre }}</center></td>
                     <td><center>{{ deta1.FechaCompra }}</center></td>
                     <td><center>{{ deta1.cantidad }}</center></td>

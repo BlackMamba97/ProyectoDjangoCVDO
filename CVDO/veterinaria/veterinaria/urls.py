@@ -18,24 +18,38 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from ventas.views import Comprobanteview, FichadeVentas
+from ventas.views import Comprobanteview, FichadeVentas, FichadeVentashoy, FichadeVentasmes, FichadeVentasaño
 from compras.views import Comprobantecompraview
 from productos.views import FichadeProductos, FichadeProductosproximos, FichadeProductosOrden
 from productos.views import FichadeProductos2, FichadeProductosproximos2, FichadeProductosOrden2
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('veterinaria/', admin.site.urls),
     # path('chaining/', include('smart_selects.urls')),
     url(r"^comprobanteventa/(?P<id>)", Comprobanteview.as_view()),
     url(r"^comprobantecompra/(?P<id>)", Comprobantecompraview.as_view()),
     url(r"^InformeVentas/", FichadeVentas.as_view()),
-    url(r"^InformedeProductosVencidos/", FichadeProductos.as_view()),
-    url(r"^InformedeProductosdeOfertas/", FichadeProductosproximos.as_view()),
-    url(r"^InformedeProductosenOrden/", FichadeProductosOrden.as_view()),
+    url(r"^InformedeProductosVencidos/", FichadeProductos.as_view(
+        ), name="informevencido"),
+    url(r"^InformedeProductosdeOfertas/", FichadeProductosproximos.as_view(
+        ), name="informeoferta"),
+    url(r"^InformedeProductosenOrden/", FichadeProductosOrden.as_view(
+        ), name="informeorden"),
     # ---------------------------
-    url(r"^InformedeProductosVencidos2/", FichadeProductos2.as_view()),
-    url(r"^InformedeProductosdeOfertas2/", FichadeProductosproximos2.as_view()),
-    url(r"^InformedeProductosenOrden2/", FichadeProductosOrden2.as_view()),
+    url(r"^InformedeProductosVencidos2/", FichadeProductos2.as_view(
+        ), name="informevencido2"),
+    url(r"^InformedeProductosdeOfertas2/", FichadeProductosproximos2.as_view(
+        ), name="informeoferta2"),
+    url(r"^InformedeProductosenOrden2/", FichadeProductosOrden2.as_view(
+        ), name="informeorden2"),
+    # --------Ventas de HOY, MES, AÑO--
+    url(r"^comprobanteventahoy/", FichadeVentashoy.as_view(
+        ), name="ventasdia"),
+    url(r"^comprobanteventames/", FichadeVentasmes.as_view(
+        ), name="ventasmes"),
+    url(r"^comprobanteventasaño/", FichadeVentasaño.as_view(
+        ), name="ventasanual"),
+    url(r"^comprobanteventa/(?P<id>)", Comprobanteview.as_view()),
     ]
 
 if settings.DEBUG:

@@ -14,7 +14,7 @@ class FichadeProductos(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         # la variable prods recoge todos los detalles existentes
-        prods = DetalleProducto.objects.all()
+        prods = DetalleProducto.objects.exclude(cantidad=0)
         day = date.today()
         # la variable day captura la fecha de hoy
         return super(FichadeProductos, self).get_context_data(
@@ -36,7 +36,7 @@ class FichadeProductos2(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         # la variable prods recoge todos los detalles existentes
-        prods = DetalleProducto.objects.all()
+        prods = DetalleProducto.objects.exclude(cantidad=0)
         day = date.today()
         # la variable day captura la fecha de hoy
         return super(FichadeProductos2, self).get_context_data(
@@ -58,7 +58,8 @@ class FichadeProductosproximos(PDFTemplateView):
     template_name = "InformedeProductosproximos.html"
 
     def get_context_data(self, **kwargs):
-        prods = DetalleProducto.objects.exclude(fechavencimiento=None)
+        prods = DetalleProducto.objects.exclude(fechavencimiento=None).exclude(
+            cantidad=0)
         # Se crea la variable prods que manda a capturar todos los
         # detalles de productos excluyendo todos aquellos que no tengan
         # fecha de Vencimiento
@@ -84,7 +85,8 @@ class FichadeProductosproximos2(PDFTemplateView):
     template_name = "InformedeProductosproximos2.html"
 
     def get_context_data(self, **kwargs):
-        prods = DetalleProducto.objects.exclude(fechavencimiento=None)
+        prods = DetalleProducto.objects.exclude(fechavencimiento=None).exclude(
+            cantidad=0)
         # Se crea la variable prods que manda a capturar todos los
         # detalles de productos excluyendo todos aquellos que no tengan
         # fecha de Vencimiento
@@ -109,7 +111,7 @@ class FichadeProductosOrden(PDFTemplateView):
     template_name = "InformedeProductosenOrden.html"
 
     def get_context_data(self, **kwargs):
-        prods = DetalleProducto.objects.all()
+        prods = DetalleProducto.objects.exclude(cantidad=0)
         # prods manda a capturar todos los detalles de productos
         producto = Producto.objects.all()
         # producto manda a capturar todos los productos
@@ -132,7 +134,7 @@ class FichadeProductosOrden2(PDFTemplateView):
     template_name = "InformedeProductosenOrden2.html"
 
     def get_context_data(self, **kwargs):
-        prods = DetalleProducto.objects.all()
+        prods = DetalleProducto.objects.exclude(cantidad=0)
         # prods manda a capturar todos los detalles de productos
         producto = Producto.objects.all()
         # producto manda a capturar todos los productos

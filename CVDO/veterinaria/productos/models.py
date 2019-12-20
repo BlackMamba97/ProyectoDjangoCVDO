@@ -13,7 +13,7 @@ from django.utils import timezone
 # creación de modelo de Tipo de Producto(categoria)
 class tipoproducto(models.Model):
     TipoProducto = models.CharField(
-        'Tipo de Producto', max_length=150)
+        'Tipo de Producto', max_length=150, unique=True)
 
     def __str__(self):
         return "%s " % (self.TipoProducto)
@@ -27,7 +27,7 @@ class tipoproducto(models.Model):
 # creación de modelo Producto con todos los atributos correspondientes
 class Producto(models.Model):
     image = models.ImageField('Ingrese Imagen', null=True, blank=True)
-    nombre = models.CharField('Nombre', max_length=150)
+    nombre = models.CharField('Nombre', max_length=150, unique=True)
 # inserción de tipo producto que sera una llave foranea de tipoproducto
     tipoProducto = models.ForeignKey(
         tipoproducto, on_delete=models.CASCADE, null=True, blank=True)

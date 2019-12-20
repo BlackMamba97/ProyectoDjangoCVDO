@@ -39,7 +39,7 @@
             {% block userlinks %}
                 {% if site_url %}
                 <br>
-                    <a href="/admin/"><img src="/media/programa/home.png" width="15px"/>{% trans 'View site' %}</a> /
+                    <a href="/veterinaria/"><img src="/media/programa/home.png" width="15px"/>{% trans 'View site' %}</a> /
                 {% endif %}
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}

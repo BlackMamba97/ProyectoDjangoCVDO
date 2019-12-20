@@ -46,7 +46,7 @@
         <meta name="author" content="">
         
 
-        <title>Constancia de Ventas</title>
+        <title>Ventas del Mes</title>
     </head>
     <body>
         <!--
@@ -60,7 +60,7 @@
             <br clear="absmiddle"> Tel. 4511-8106</br>
     <div id="content">
         <h1><center>Centro Veterinario de Oriente</center></h1>
-        <center><h1>Listado de Ventas</h1></center>
+        <center><h1>Listado de Ventas del Mes</h1></center>
         <table align="center" style="border:0.5px solid black">
             <tr>
                 <th>Vendedor</th>
@@ -72,6 +72,7 @@
                 <th>Total</th>
             </tr>
             {% for deta1 in prods %}
+            {% if deta1.fecha.month == day.month and deta1.fecha.year == day.year %}
             <tr>
                 <td><center>{{ deta1.vendedor }}</center></td>
                 <td><center>{{ deta1.fecha }}</center></td>
@@ -81,6 +82,7 @@
                 <td><center>{{ deta1.pago }}</center></td>
                 <td><center>{{ deta1.total }}</center></td>
             </tr>
+            {% endif %}
             {% endfor %}
         </table>
     </div>

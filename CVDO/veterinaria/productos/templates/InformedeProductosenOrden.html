@@ -6,7 +6,7 @@
 
     <style>
         @page {
-            size: letter landscape;
+            size: letter;
             margin: 2cm;
             @frame header {
                 -pdf-frame-content: page-header;
@@ -78,7 +78,6 @@
             
             {% for deta1 in prods %}
             {% if deta1.validador == True %}
-
             {% else %}
                     {% if deta1.fechavencimiento > day  or deta1.fechavencimiento == None%}
                         <tr>

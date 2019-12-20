@@ -10,6 +10,7 @@ from django.db import transaction
 from datetime import date
 from productos.models import ubicacion
 from Proveedor.models import Proveedor
+from caja.models import Cajas
 
 
 class tipo_pago(models.Model):
@@ -142,6 +143,7 @@ class detalle_compra(models.Model):
                     # si la fechavencimiento es nulo
                     targe = DetalleProducto.objects.filter(
                         producto=self.producto).last()
+                    caja = Cajas.objects.all().last()
                     if targe is None:
                         # si no existe un detalle de producto
                         target = DetalleProducto()
@@ -153,9 +155,10 @@ class detalle_compra(models.Model):
                         target.numeroloteproducto = self.numeroloteproducto
                         # se ingresan todos los datos y se guarda en detalle
                         # de producto automaticamente
-
+                        caja.perdida = (caja.perdida + self.subtotal)
                         target.ubicacion = self.ubicacion
                         # Se guarda el detalle de Producto
+                        caja.save()
                         target.save()
                     else:
                         if self.preciocompra == targe.preciocompra and self.precioventa == targe.precioventa:
@@ -177,7 +180,9 @@ class detalle_compra(models.Model):
                             target.numeroloteproducto = self.numeroloteproducto
                             target.ubicacion = self.ubicacion
                             # target.estado = True
+                            caja.perdida = (caja.perdida + self.subtotal)
                             target.save()
+                            caja.save()
                             # se graba el detalle del producto
                 else:
                     if self.numeroloteproducto is None:
@@ -195,7 +200,9 @@ class detalle_compra(models.Model):
                         target.ubicacion = self.ubicacion
                         # se ingresan los atributos
                         # y se guardan los datos del detalle
+                        caja.perdida = (caja.perdida + self.subtotal)
                         target.save()
+                        caja.save()
             else:
                 ()
             super(detalle_compra, self).save(force_insert, force_update, using)
@@ -212,9 +219,12 @@ class detalle_compra(models.Model):
                     # Si los datos de fecha compra,preciocompra y precio venta
                     # son iguales solo cambia la variable cantidad y
                     # resta las existencias
+                    caja = Cajas.objects.all().last()
                     detalle.cantidad = detalle.cantidad - self.cantidad
                     self.comprobante.total = self.comprobante.total - self.subtotal
+                    caja.perdida = (caja.perdida - self.subtotal)
                     # y se guarda el detalle del producto
+                    caja.save()
                     detalle.save()
                     self.comprobante.save()
 

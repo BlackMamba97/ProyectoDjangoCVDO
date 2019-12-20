@@ -24,6 +24,16 @@ class detalle_ventaInline(admin.TabularInline):
     ]
     autocomplete_fields = ['producto']
 
+    # def get_formset_kwargs(self, request, obj, form, change):
+    #    print('Si entro a detalle')
+    #    det = DetalleProducto.objects.filter(
+    #        producto=self.producto).exclude(
+    #        cantidad=0).last()
+    #    if det.fechavencimiento > date.today() and det.numeroloteproducto==self.numeroloteproducto:
+    #        formset_kwargs = messages.info(
+    #            request, 'Este lote es el adecuado.')
+    #    return formset_kwargs
+
 
 class comprobanteResource(resources.ModelResource):
     class Meta:
@@ -44,9 +54,10 @@ class comprobanteResource(resources.ModelResource):
 
 class ComprobanteVentaAdmin(ExportMixin, admin.ModelAdmin):
     # se crea la clase comprobanteventa para
-    #
+    fields = ['fecha', (
+        'cliente', 'pagado'), 'vendedor', 'pago', 'total', 'efectivo', 'vuelto']
     list_filter = ['fecha', 'vendedor']
-    list_display = ['fecha', 'vendedor', 'total', 'pago', 'vuelto', 'compro']
+    list_display = ['fecha', 'vendedor', 'total', 'pagado', 'pago', 'vuelto', 'compro']
     inlines = [detalle_ventaInline]
     resourse_class = comprobanteResource
     readonly_fields = ['total', 'vuelto']
@@ -63,6 +74,15 @@ class ComprobanteVentaAdmin(ExportMixin, admin.ModelAdmin):
         # empleado = Empleado.objects.filter(Empleado=usuario.id)
         form.base_fields['vendedor'].initial = usuario
         return form
+
+    def save_model(self, request, obj, form, change):
+        print('Si entro al compobante')
+        messages.info(
+            request, (
+                'Asegurese de ingresar siempre el producto proximo a venceser.'
+                ))
+        super(
+            ComprobanteVentaAdmin, self).save_model(request, obj, form, change)
 
     def impr_prods(self, request, queryset):
         return redirect('/InformeVentas')

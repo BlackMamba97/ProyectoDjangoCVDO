@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Proveedor(models.Model):
-    nit = models.CharField('NIT', max_length=11, )
+    nit = models.CharField('NIT', max_length=11, unique=True)
     nombre = models.CharField('Nombre', max_length=80)
     direccion = models.CharField('Direccion', max_length=150)
     telefono = models.CharField('Telefono', max_length=15)

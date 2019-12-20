@@ -12,6 +12,7 @@ from datetime import date
 from django.http import HttpResponse
 from django.contrib import messages
 import warnings
+from caja.models import Cajas
 
 
 class TipoPago(models.Model):
@@ -27,6 +28,7 @@ class ComprobanteVenta(models.Model):
     fecha = models.DateField('Fecha de Venta', default=date.today)
     cliente = models.ForeignKey(
         Cliente, on_delete=models.CASCADE, null=False)
+    pagado = models.BooleanField('Pagado', default=True)
     total = models.FloatField('Total', null=True, default=0.00)
     pago = models.ForeignKey(TipoPago, on_delete=models.CASCADE, null=False)
     efectivo = models.FloatField('Efectivo', null=True, default=0.00)
@@ -75,7 +77,7 @@ class DetalleVenta(models.Model):
         Productos_Empleado, on_delete=models.CASCADE, null=True)
     numeroloteproducto = models.CharField(
        'Numero de lote',
-       max_length=20, null=True, blank=True)
+       max_length=20, null=True, blank=True, help_text='Asegurese de ingresar el numero de lote proximo a vencer')
     cantidad = models.PositiveIntegerField('Cantidad', default=0)
     # se crea atributo comis el cual consiste en
     # proporcionar comision al vendedor en caso
@@ -146,7 +148,7 @@ class DetalleVenta(models.Model):
                                         # de verificación
                                         raise ValidationError(
                                             ' Verifique las existencias ya que varían los precios de {}'.format(
-                                                de.producto))
+                                                det.producto))
                             else:
                                 # si la cantidad del producto es 0
                                 # no se puede vender ningun producto
@@ -202,23 +204,7 @@ class DetalleVenta(models.Model):
                                     if prod.cantidad >= self.cantidad:
                                         # verifica si el producto con ese numero de lote
                                         # cuenta con la cantidad que se solicita en la venta
-                                        det = DetalleProducto.objects.filter(
-                                            producto=self.producto).exclude(
-                                            cantidad=0).last()
-                                        if det.fechavencimiento > date.today() and det.numeroloteproducto==self.numeroloteproducto:
-                                            # raise messages.SUCCESS('Este lote es el adecuado')
-                                            # messages.success(request, 'Este lote es el adecuado.')
-                                            # obj.save()
-                                            # messages.add_message(request, messages.INFO, 'Este Lote es el adecuado')
-                                            # raise messages()
-                                            ()
-                                        else:
-                                            # raise messages.SUCCESS('Este lote no es el adecuado')
-                                            # messages.success(request, 'Este lote no es el adecuado.')
-                                            # obj.save()
-                                            # messages.add_message(request, messages.INFO, 'Este Lote No es el adecuado')
-                                            # raise messages("Este Lote No es el adecuado")
-                                            ()
+                                        ()
                                     else:
                                         # si no hay suficiente cantidad de producto
                                         # con ese numero de lote genera una alerta
@@ -274,11 +260,11 @@ class DetalleVenta(models.Model):
                                                     pro.porcentaje/100))
                                             emp = Empleado.objects.filter(
                                                 Empleado=self.comprobante.vendedor.id).get()
-                                            print('---------------')
-                                            print(emp.comision)
-                                            print(emp)
+                                            caja = Cajas.objects.all().last()
+                                            caja.ganancia  = (caja.ganancia + self.subtotal)
                                             emp.comision = emp.comision + self.comis
                                             emp.save()
+                                            caja.save()
                                             detonador.save()
                                         else:
                                             ()
@@ -304,8 +290,7 @@ class DetalleVenta(models.Model):
                             pro = Producto.objects.filter(
                                 nombre=self.producto.nombre).get()
                             hoy = date.today()
-                            # print(produc.estadoo)
-                            print('-----------------------------------------------')
+                            caja = Cajas.objects.all().last()
                             if prod.fechavencimiento > hoy:
                                 if pro.existencia >= self.cantidad:
                                     if prod.cantidad >= self.cantidad:
@@ -316,10 +301,9 @@ class DetalleVenta(models.Model):
                                                 pro.porcentaje/100))
                                         emp = Empleado.objects.filter(
                                             Empleado=self.comprobante.vendedor.id).get()
-                                        print('---------------')
-                                        print(emp.comision)
-                                        print(emp)
+                                        caja.ganancia  = (caja.ganancia + self.subtotal)
                                         emp.comision = emp.comision + self.comis
+                                        caja.save()
                                         emp.save()
                                         prod.save()
 
@@ -327,6 +311,7 @@ class DetalleVenta(models.Model):
 
     def eliminar(self):
         detpro = DetalleProducto.objects.all()
+        caja = Cajas.objects.all().last()
         for i in detpro:
             preci = self.subtotal/self.cantidad
             if (
@@ -335,10 +320,12 @@ class DetalleVenta(models.Model):
                     self.comprobante.total = (
                         self.comprobante.total - self.subtotal)
                     detpro.cantidad = detpro.cantidad + self.cantidad
+                    caja.ganancia = (caja.ganancia - self.subtotal)
                     emp = Empleado.objects.filter(
                         Empleado=self.comprobante.vendedor.id).get()
                     emp.comision = emp.comision - self.comis
                     self.comprobante.save()
+                    caja.save()
                     emp.save()
                     detpro.save()
 

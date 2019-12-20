@@ -33,4 +33,55 @@ class FichadeVentas(PDFTemplateView):
             **kwargs
             )
 
+# FICHAS PARA CREAR LAS VENTAS DÍA MES AÑO
+
+
+class FichadeVentashoy(PDFTemplateView):
+    template_name = "InformedeVentashoy.html"
+
+    def get_context_data(self, **kwargs):
+        day = date.today()
+        prods = ComprobanteVenta.objects.filter(
+            fecha=day).extra(order_by=['fecha'])
+
+        return super(FichadeVentashoy, self).get_context_data(
+            pagesize="Letter",
+            title="Ventas",
+            prods=prods,
+            day=day,
+            **kwargs
+            )
+
+
+class FichadeVentasmes(PDFTemplateView):
+    template_name = "InformedeVentasmes.html"
+
+    def get_context_data(self, **kwargs):
+        day = date.today()
+        prods = ComprobanteVenta.objects.filter(
+            ).extra(order_by=['fecha'])
+        return super(FichadeVentasmes, self).get_context_data(
+            pagesize="Letter",
+            title="Ventas",
+            prods=prods,
+            day=day,
+            **kwargs
+            )
+
+
+class FichadeVentasaño(PDFTemplateView):
+    template_name = "InformedeVentasaño.html"
+
+    def get_context_data(self, **kwargs):
+        day = date.today()
+        prods = ComprobanteVenta.objects.filter().extra(order_by=['fecha'])
+
+        return super(FichadeVentasaño, self).get_context_data(
+            pagesize="Letter",
+            title="Ventas",
+            prods=prods,
+            day=day,
+            **kwargs
+            )
+
 # Create your views here.

@@ -9,7 +9,7 @@ class Cliente(models.Model):
     nombre = models.CharField('Nombre', max_length=50)
     apellido = models.CharField('Apellido', max_length=50)
     direccion = models.CharField('Direccion', max_length=50)
-    telefono = models.PositiveIntegerField('Telefono')
+    telefono = models.CharField('Telefono', max_length=15)
 
     def __str__(self):
         return "%s %s" % (
